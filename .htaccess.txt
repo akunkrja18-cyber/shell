@@ -1,0 +1,2 @@
+ErrorDocument 404 https://jaabjournal.org/
+ErrorDocument 403 https://jaabjournal.org/
