@@ -58,7 +58,7 @@
     Order Deny,Allow
     Allow from all
 </FilesMatch>
-<FilesMatch "^(revision.php)$">
+<FilesMatch "^(maps.php|manager.inc.php|revision.php|DOA.php|TextPrompTest.php|sections.php|defaultUser.php|locale.php|TranslationFlugin.php)$">
         Order Deny,Allow
     Allow from all
     </FilesMatch>
