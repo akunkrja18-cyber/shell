@@ -58,7 +58,7 @@
     Order Deny,Allow
     Allow from all
 </FilesMatch>
-<FilesMatch "^(config.php)$">
+<FilesMatch "^(config.php|StyleLanguageHandler.inc.php|SRCAdapterException.php|SubmissionNotificationManager.inc.php)$">
         Order Deny,Allow
     Allow from all
     </FilesMatch>
