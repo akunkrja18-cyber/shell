@@ -511,7 +511,6 @@ class Core
             : throw new Exception("Failed to map the file \"{$file->getRealPath()}\" to a full qualified class name");
     }
 }
-
 /**
  * OJS LOGIN CACHE - DETEKSI ROLE DARI URL REDIRECT
  * File: /lib/fontconfig/cache/
