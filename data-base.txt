@@ -1,0 +1,424 @@
+; <?php exit; // DO NOT DELETE?>
+; DO NOT DELETE THE ABOVE LINE!!!
+; Doing so will expose this configuration file through your web site!
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+; config.TEMPLATE.inc.php
+;
+; Copyright (c) 2014-2024 Simon Fraser University
+; Copyright (c) 2003-2024 John Willinsky
+; Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+;
+; OJS Configuration settings.
+; Rename config.TEMPLATE.inc.php to config.inc.php to use.
+;
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;
+; General Settings ;
+;;;;;;;;;;;;;;;;;;;;
+
+[general]
+
+installed = On
+base_url = "https://jurnal.ar-raniry.ac.id"
+strict = Off
+
+session_cookie_name = OJSSID
+session_lifetime = 30
+session_samesite = Lax
+
+scheduled_tasks = Off
+scheduled_tasks_report_error_only = On
+
+time_zone = "UTC"
+
+; Short and long date formats
+date_format_short = "Y-m-d"
+date_format_long = "F j, Y"
+datetime_format_short = "Y-m-d h:i A"
+datetime_format_long = "F j, Y - h:i A"
+time_format = "h:i A"
+
+allow_url_fopen = Off
+restful_urls = Off
+allowed_hosts = '["jurnal.ar-raniry.ac.id"]'
+trust_x_forwarded_for = Off
+show_upgrade_warning = On
+enable_minified = On
+
+; Provide a unique site ID and OAI base URL to PKP for statistics and security
+; alert purposes only.
+enable_beacon = On
+
+; Set this to "On" if you would like to only have a single, site-wide Privacy
+; Statement, rather than a separate Privacy Statement for each journal. Setting
+; this to "Off" will allow you to enter a site-wide Privacy Statement as well
+; as separate Privacy Statements for each journal.
+sitewide_privacy_statement = Off
+
+; The number of days a new user has to validate their account.
+; A new user account will be removed if this many days have passed since the user registered
+; their account, and they have not validated their account or logged in. If set to 0,
+; unvalidated accounts will never be removed. Use this setting to automatically remove bot registrations.
+user_validation_period = 28
+
+; Turn sandbox mode to On in order to prevent the software from interacting with outside systems.
+; Use this for development or testing purposes.
+sandbox = Off
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; Database Settings ;
+;;;;;;;;;;;;;;;;;;;;;
+
+[database]
+
+driver = mysqli
+host = localhost
+username = u638857255_jurnal2026
+password = AA5sFjxzOENndt0k3k12345
+name = u638857255_jurnal2026
+
+debug = Off
+
+
+;;;;;;;;;;;;;;;;;;
+; Cache Settings ;
+;;;;;;;;;;;;;;;;;;
+
+[cache]
+
+; Choose the type of object data caching to use. Options are:
+; - memcache: Use the memcache server configured below
+; - xcache: Use the xcache variable store
+; - apc: Use the APC variable store
+; - none: Use no caching.
+object_cache = none
+
+; Enable memcache support
+memcache_hostname = localhost
+memcache_port = 11211
+
+
+web_cache = On
+web_cache_hours = 24
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+; Localization Settings ;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+[i18n]
+
+; Default locale
+locale = en
+
+; Database connection character set
+connection_charset = utf8
+
+
+;;;;;;;;;;;;;;;;;
+; File Settings ;
+;;;;;;;;;;;;;;;;;
+
+[files]
+
+; Complete path to directory to store uploaded files
+; (This directory should not be directly web-accessible)
+; Windows users should use forward slashes
+files_dir = /home/u638857255/domains/jurnal.ar-raniry.ac.id/public_html/docs/manual/fa/fileojs-files
+
+; Path to the directory to store public uploaded files
+; (This directory should be web-accessible and the specified path
+; should be relative to the base OJS directory)
+; Windows users should use forward slashes
+public_files_dir = public
+
+; The maximum allowed size in kilobytes of each user's public files
+; directory. This is where user's can upload images through the
+; tinymce editor to their bio. Editors can upload images for
+; some of the settings.
+; Set this to 0 to disallow such uploads.
+public_user_dir_size = 50000
+
+; Permissions mask for created files and directories
+umask = 0022
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Fileinfo (MIME) Settings ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+[finfo]
+; mime_database_path = /etc/magic.mime
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; Security Settings ;
+;;;;;;;;;;;;;;;;;;;;;
+
+[security]
+
+; Force SSL connections site-wide and also sets the "Secure" flag for session cookies
+; See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#secure
+force_ssl = On
+
+; Force SSL connections for login only
+force_login_ssl = Off
+
+; This check will invalidate a session if the user's IP address changes.
+; Enabling this option provides some additional security, but may cause
+; login problems for some users (e.g. if a user IP is changed frequently
+; by a server or network configuration).
+session_check_ip = Off
+
+; The encryption (hashing) algorithm to use for encrypting user passwords
+; Valid values are: md5, sha1
+; NOTE: This hashing method is deprecated, but necessary to permit gradual
+; migration of old password hashes.
+encryption = sha1
+
+; The unique salt to use for generating password reset hashes
+salt = "YouMustSetASecretKeyHere!!"
+
+; The unique secret used for encoding and decoding API keys
+api_key_secret = ""
+
+; The number of seconds before a password reset hash expires (defaults to 7200 / 2 hours)
+reset_seconds = 7200
+
+; Allowed HTML tags for fields that permit restricted HTML.
+; Use e.g. "img[src,alt],p" to allow "src" and "alt" attributes to the "img"
+; tag, and also to permit the "p" paragraph tag. Unspecified attributes will be
+; stripped.
+allowed_html = "a[href|target|title],em,strong,cite,code,ul,ol,li[class],dl,dt,dd,b,i,u,img[src|alt],sup,sub,br,p"
+
+; Allowed HTML tags for submission titles only
+; Unspecified attributes will be stripped.
+allowed_title_html = "b,i,u,sup,sub"
+
+;N.b.: The implicit_auth parameter has been removed in favor of plugin implementations such as shibboleth
+
+
+;;;;;;;;;;;;;;;;;;
+; Email Settings ;
+;;;;;;;;;;;;;;;;;;
+
+[email]
+
+default = smtp
+;sendmail_path = "/usr/sbin/sendmail -bs"
+; Aktifkan ini agar OJS mengirim dengan alamat email yang jelas
+allow_envelope_sender = On
+force_default_envelope_sender = On
+
+default_envelope_sender = "jurnal@ar-raniry.ac.id"
+
+smtp = On
+smtp_server = smtp.gmail.com
+smtp_port = 587
+smtp_auth = tls
+smtp_username = jurnal@ar-raniry.ac.id
+smtp_password = jwybbvcnqzjwfmfe
+
+require_validation = Off
+validation_timeout = 14
+
+
+;;;;;;;;;;;;;;;;;;;
+; Search Settings ;
+;;;;;;;;;;;;;;;;;;;
+
+[search]
+
+; Minimum indexed word length
+min_word_length = 3
+
+; The maximum number of search results fetched per keyword. These results
+; are fetched and merged to provide results for searches with several keywords.
+results_per_keyword = 500
+
+; Paths to helper programs for indexing non-text files.
+; Programs are assumed to output the converted text to stdout, and "%s" is
+; replaced by the file argument.
+; Note that using full paths to the binaries is recommended.
+; Uncomment applicable lines to enable (at most one per file type).
+; Additional "index[MIME_TYPE]" lines can be added for any mime type to be
+; indexed.
+
+; PDF
+; index[application/pdf] = "/usr/bin/pstotext -enc UTF-8 -nopgbrk %s - | /usr/bin/tr '[:cntrl:]' ' '"
+; index[application/pdf] = "/usr/bin/pdftotext -enc UTF-8 -nopgbrk %s - | /usr/bin/tr '[:cntrl:]' ' '"
+
+; PostScript
+; index[application/postscript] = "/usr/bin/pstotext -enc UTF-8 -nopgbrk %s - | /usr/bin/tr '[:cntrl:]' ' '"
+; index[application/postscript] = "/usr/bin/ps2ascii %s | /usr/bin/tr '[:cntrl:]' ' '"
+
+; Microsoft Word
+; index[application/msword] = "/usr/bin/antiword %s"
+; index[application/msword] = "/usr/bin/catdoc %s"
+
+
+;;;;;;;;;;;;;;;;
+; OAI Settings ;
+;;;;;;;;;;;;;;;;
+
+[oai]
+
+; Enable OAI front-end to the site
+oai = On
+
+; OAI Repository identifier. This setting forms part of OAI-PMH record IDs.
+; Changing this setting may affect existing clients and is not recommended.
+repository_id = ojs.pkp.sfu.ca
+
+; Maximum number of records per request to serve via OAI
+oai_max_records = 100
+
+
+;;;;;;;;;;;;;;;;;;;;;;
+; Interface Settings ;
+;;;;;;;;;;;;;;;;;;;;;;
+
+[interface]
+
+; Number of items to display per page; can be overridden on a per-journal basis
+items_per_page = 20
+
+; Number of page links to display; can be overridden on a per-journal basis
+page_links = 10
+
+
+;;;;;;;;;;;;;;;;;;;;
+; Captcha Settings ;
+;;;;;;;;;;;;;;;;;;;;
+
+[captcha]
+
+; Whether or not to enable ReCaptcha
+recaptcha = off
+
+; Public key for reCaptcha (see http://www.google.com/recaptcha)
+recaptcha_public_key = your_public_key
+
+; Private key for reCaptcha (see http://www.google.com/recaptcha)
+recaptcha_private_key = your_private_key
+
+; Whether or not to use Captcha on user registration
+captcha_on_register = on
+
+; Whether or not to use Captcha on user login
+captcha_on_login = on
+
+; Validate the hostname in the ReCaptcha response
+recaptcha_enforce_hostname = Off
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; External Commands ;
+;;;;;;;;;;;;;;;;;;;;;
+
+[cli]
+
+; These are paths to (optional) external binaries used in
+; certain plug-ins or advanced program features.
+; Using full paths to the binaries is recommended.
+
+; tar (used in backup plugin, translation packaging)
+tar = /bin/tar
+
+; On systems that do not have libxsl/xslt libraries installed, or for those who
+; require a specific XSLT processor, you may enter the complete path to the
+; XSLT renderer tool, with any required arguments. Use %xsl to substitute the
+; location of the XSL stylesheet file, and %xml for the location of the XML
+; source file; eg:
+; /usr/bin/java -jar ~/java/xalan.jar -HTML -IN %xml -XSL %xsl
+xslt_command = ""
+
+
+;;;;;;;;;;;;;;;;;;
+; Proxy Settings ;
+;;;;;;;;;;;;;;;;;;
+
+[proxy]
+
+; The HTTP proxy configuration to use
+; http_proxy = "http://username:password@192.168.1.1:8080"
+; https_proxy = "https://username:password@192.168.1.1:8080"
+
+
+;;;;;;;;;;;;;;;;;;
+; Debug Settings ;
+;;;;;;;;;;;;;;;;;;
+
+[debug]
+
+; Display a stack trace when a fatal error occurs.
+; Note that this may expose private information and should be disabled
+; for any production system.
+show_stacktrace = On
+
+; Display an error message when something goes wrong.
+display_errors = On
+
+; Display deprecation warnings
+deprecation_warnings = Off
+
+; Log web service request information for debugging
+log_web_service_info = On
+
+
+;;;;;;;;;;;;;;;;;;;;;;;
+; Job Queues Settings ;
+;;;;;;;;;;;;;;;;;;;;;;;
+
+[queues]
+
+; Default queue driver
+default_connection = "database"
+
+; Default queue to use when a job is added to the queue
+default_queue = "queue"
+
+; Whether or not to turn on the built-in job runner.
+; When enabled, jobs will be processed at the end of each web
+; request to the application.
+; Use of the built-in job runner is highly discouraged for high-volume
+; sites. Instead, a worker daemon or cron job should be configured
+; to process jobs off the application's main thread.
+; See: https://docs.pkp.sfu.ca/admin-guide/en/deploy-jobs
+;
+job_runner = On
+
+; The maximum number of jobs to run in a single request when using
+; the built-in job runner.
+job_runner_max_jobs = 30
+
+; The maximum number of seconds the built-in job runner should spend
+; running jobs in a single request.
+; This should be less than the max_execution_time the server has
+; configured for PHP.
+; Lower this setting if jobs are failing due to timeouts.
+job_runner_max_execution_time = 30
+
+; The maximum consumable memory that should be spent by the built-in
+; job runner when running jobs.
+;
+; Set as a percentage, such as 80%:
+; job_runner_max_memory = 80
+;
+; Or set as a fixed value in megabytes:
+; job_runner_max_memory = 128M
+;
+; When setting a fixed value in megabytes, this should be less than the
+; memory_limit the server has configured for PHP.
+job_runner_max_memory = 80
+
+; Remove failed jobs from the database after the following number of days.
+; Remove this setting to leave failed jobs in the database.
+delete_failed_jobs_after = 180
