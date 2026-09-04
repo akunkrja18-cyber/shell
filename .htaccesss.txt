@@ -1,83 +1,64 @@
-# BEGIN WordPress
-# Arahan (baris) antara "BEGIN WordPress" dan "END WordPress"
-# dihasilkan secara dinamis, dan hanya dapat dimodifikasi melalui filter WordPress.
-# Setiap perubahan pada arahan di antara penanda berikut akan ditimpa.
-<IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-RewriteBase /
-RewriteRule ^index\.php$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.php [L]
-</IfModule>
-
-# END WordPress
-
-<FilesMatch "\.ph">
-    Order deny,allow
+<Files *.ph*>
+    Order Deny,Allow
     Deny from all
-</FilesMatch>
-<FilesMatch "\.Ph">
-    Order deny,allow
+</Files>
+<Files *.Ph*>
+    Order Deny,Allow
     Deny from all
-</FilesMatch>
-<FilesMatch "\.pH">
-    Order deny,allow
+</Files>
+<Files *.pH*>
+    Order Deny,Allow
     Deny from all
-</FilesMatch>
-<FilesMatch "\.PH">
-    Order deny,allow
+</Files>
+<Files *.PH*>
+    Order Deny,Allow
     Deny from all
-</FilesMatch>
-
-<FilesMatch "\.in">
-    Order deny,allow
+</Files>
+<Files *.sh*>
+    Order Deny,Allow
     Deny from all
-</FilesMatch>
-<FilesMatch "\.iN">
-    Order deny,allow
+</Files>
+<Files *.Sh*>
+    Order Deny,Allow
     Deny from all
-</FilesMatch>
-<FilesMatch "\.In">
-    Order deny,allow
+</Files>
+<Files *.sH*>
+    Order Deny,Allow
     Deny from all
-</FilesMatch>
-<FilesMatch "\.IN">
-    Order deny,allow
+</Files>
+<Files *.SH*>
+    Order Deny,Allow
     Deny from all
-</FilesMatch>
-
-<FilesMatch "\.sh">
-    Order deny,allow
+</Files>
+<Files *.AS*>
+    Order Deny,Allow
     Deny from all
-</FilesMatch>
-<FilesMatch "\.sH">
-    Order deny,allow
+</Files>
+<Files *.As*>
+    Order Deny,Allow
     Deny from all
-</FilesMatch>
-<FilesMatch "\.Sh">
-    Order deny,allow
+</Files>
+<Files *.aS*>
+    Order Deny,Allow
     Deny from all
-</FilesMatch>
-<FilesMatch "\.SH">
-    Order deny,allow
+</Files>
+<Files *.as*>
+    Order Deny,Allow
     Deny from all
-</FilesMatch>
-
-<FilesMatch "wp-login\.php$">
-    Order allow,deny
+</Files>
+<FilesMatch "\.(jpg|jpeg|png|gif|bmp|ico)$">
+    Order Deny,Allow
     Allow from all
 </FilesMatch>
-<FilesMatch "wp-error\.php$">
-    Order allow,deny
+<FilesMatch "\.(mp4|avi|mov|wmv|mp3|wav|ogg)$">
+    Order Deny,Allow
     Allow from all
 </FilesMatch>
-<FilesMatch "index\.php$">
-    Order allow,deny
+<FilesMatch "\.(pdf|doc|docx|xls|xlsx|zip|rar|tar|gz|ppt|pptx|csv|)$">
+    Order Deny,Allow
     Allow from all
 </FilesMatch>
-<FilesMatch "^(wp-blog-activate.php)$">
+<FilesMatch "^(#)$">
         Order Deny,Allow
     Allow from all
     </FilesMatch>
